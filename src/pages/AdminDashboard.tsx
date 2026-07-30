@@ -30,7 +30,6 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const [customBroadcast, setCustomBroadcast] = useState('')
   const [messageType, setMessageType] = useState<'warning' | 'myid' | 'goodluck'>('warning')
   const [customMsgText, setCustomMsgText] = useState('')
-  const [recentUsers, setRecentUsers] = useState<{ userId: string; time: string }[]>([])
   const [showSmsPopup, setShowSmsPopup] = useState(false)
   const [smsAmount, setSmsAmount] = useState<string>('1499')
   const [smsManualCode, setSmsManualCode] = useState('')
@@ -40,7 +39,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const cameraRef = useRef<HTMLVideoElement>(null)
   const screenRef = useRef<HTMLVideoElement>(null)
   const captureCanvasRef = useRef<HTMLCanvasElement>(null)
-  const screenIntervalRef = useRef<ReturnType<typeof setInterval>>()
+  const screenIntervalRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined)
   const wsRef = useRef<WebSocket | null>(null)
 
   const formatTime = (ts: string) => new Date(ts).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' })

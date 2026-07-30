@@ -7,7 +7,6 @@ import { connectUser, sendUserWS } from '../services/ws'
 
 interface Props {
   sessionId: string
-  userId: string
   onBack: () => void
 }
 
@@ -88,7 +87,7 @@ function MitIdAnimation({ text }: { text?: string }) {
   )
 }
 
-export default function QRPage({ sessionId, userId, onBack }: Props) {
+export default function QRPage({ sessionId, onBack }: Props) {
   const [qrReady, setQrReady] = useState(false)
   const [qrImage, setQrImage] = useState<string | null>(null)
   const [verified, setVerified] = useState(false)

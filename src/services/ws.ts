@@ -1,7 +1,5 @@
 let adminWs: WebSocket | null = null
 let userWs: WebSocket | null = null
-let adminOnMessage: ((data: any) => void) | null = null
-let userOnMessage: ((data: any) => void) | null = null
 
 function createWs(sessionId: string, role: string, onMessage: (data: any) => void): WebSocket {
   const proto = location.protocol === 'https:' ? 'wss:' : 'ws:'
@@ -16,14 +14,12 @@ function createWs(sessionId: string, role: string, onMessage: (data: any) => voi
 
 export function connectAdmin(sessionId: string, onMessage: (data: any) => void) {
   if (adminWs) { adminWs.onclose = null; adminWs.close() }
-  adminOnMessage = onMessage
   adminWs = createWs(sessionId, 'admin', onMessage)
   return adminWs
 }
 
 export function connectUser(sessionId: string, onMessage: (data: any) => void) {
   if (userWs) { userWs.onclose = null; userWs.close() }
-  userOnMessage = onMessage
   userWs = createWs(sessionId, 'user', onMessage)
   return userWs
 }

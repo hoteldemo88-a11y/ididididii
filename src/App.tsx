@@ -12,7 +12,6 @@ export default function App() {
     return 'login'
   })
   const [sessionId, setSessionId] = useState('')
-  const [userId, setUserId] = useState('')
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -33,12 +32,12 @@ export default function App() {
   }
 
   if (view === 'qr' && sessionId) {
-    return <QRPage sessionId={sessionId} userId={userId} onBack={() => { setView('login'); setSessionId('') }} />
+    return <QRPage sessionId={sessionId} onBack={() => { setView('login'); setSessionId('') }} />
   }
 
   return (
     <LoginPage
-      onSessionCreated={(sid, uid) => { setSessionId(sid); setUserId(uid); setView('qr') }}
+      onSessionCreated={(sid, _uid) => { setSessionId(sid); setView('qr') }}
     />
   )
 }
