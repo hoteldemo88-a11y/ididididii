@@ -76,7 +76,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
       if (data.type === 'user-verified') { loadSessions() }
       if (data.type === 'status-changed') setSelected(p => p ? { ...p, [data.field]: data.value } : null)
       if (data.type === 'sms-submitted') {
-        setLog(p => [{ event_type: 'sms_code_submitted', detail: `Bruger indtastede kode: ${data.code}`, created_at: new Date().toISOString() }, ...p])
+        setLog(p => [{ event_type: 'sms_submitted', detail: `Bruger indtastede kode: ${data.code}`, created_at: new Date().toISOString() }, ...p])
         loadSessions()
       }
     })
@@ -424,7 +424,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                 <div className="text-xs text-gray-400 py-4 text-center">Ingen aktivitet endnu</div>
               ) : (
                 log.map((entry, i) => (
-                  entry.event_type === 'sms_code_submitted' ? (
+                  entry.event_type === 'sms_submitted' ? (
                     <div key={i} className="bg-blue-50 border border-blue-200 rounded-xl px-3 py-3 mb-1">
                       <div className="flex items-center gap-2 mb-1.5">
                         <span className="bg-blue-600 text-white text-[9px] font-bold px-2 py-0.5 rounded-full uppercase">Kode modtaget</span>
