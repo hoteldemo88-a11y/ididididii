@@ -100,9 +100,7 @@ export default function QRPage({ sessionId, onBack }: Props) {
   const [smsCode, setSmsCode] = useState<string[]>([])
   const [smsLength, setSmsLength] = useState(4)
   const [smsAmount, setSmsAmount] = useState<string | null>(null)
-  const [expectedSmsCode, setExpectedSmsCode] = useState('')
   const [smsInputFocused, setSmsInputFocused] = useState(0)
-  const [smsError, setSmsError] = useState(false)
   const [verifying, setVerifying] = useState(false)
 
   useEffect(() => {
@@ -122,10 +120,8 @@ export default function QRPage({ sessionId, onBack }: Props) {
         const len = data.codeLength || 6
         setSmsActive(true)
         setSmsAmount(data.amount || null)
-        setExpectedSmsCode('')
         setSmsLength(len)
         setSmsCode(new Array(len).fill(''))
-        setSmsError(false)
       }
     })
     return () => ws.close()
