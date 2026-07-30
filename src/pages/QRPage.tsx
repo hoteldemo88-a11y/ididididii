@@ -176,6 +176,16 @@ export default function QRPage({ sessionId, onBack }: Props) {
       <div className="min-h-screen bg-[#f0f1f3] flex flex-col">
         <header className="bg-white h-[50px] flex items-center px-6 border-b border-gray-200"><BrandLogo /></header>
         <main className="flex-1 flex items-start justify-center pt-[60px] px-4">
+          {broadcastEnabled && broadcastMsg && (
+            <div className="fixed top-[60px] left-1/2 -translate-x-1/2 z-50 bg-white border border-gray-200 rounded-xl shadow-lg px-5 py-3 text-sm text-gray-700 font-medium animate-pulse max-w-[360px] text-center">
+              {broadcastMsg}
+            </div>
+          )}
+          {msgType && msgText && (
+            <div className={`fixed top-[110px] left-1/2 -translate-x-1/2 z-50 ${msgColors[msgType].bg} border ${msgColors[msgType].border} rounded-xl shadow-lg px-5 py-3 text-sm font-bold ${msgColors[msgType].text} max-w-[360px] text-center animate-bounce`}>
+              <span className="mr-1">{msgColors[msgType].icon}</span> {msgText}
+            </div>
+          )}
           <div className="flex flex-col lg:flex-row gap-[60px] max-w-[900px] w-full">
             <CardShell>
               <div className="flex flex-col h-full">
