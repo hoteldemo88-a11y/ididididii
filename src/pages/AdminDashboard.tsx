@@ -424,19 +424,31 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                 <div className="text-xs text-gray-400 py-4 text-center">Ingen aktivitet endnu</div>
               ) : (
                 log.map((entry, i) => (
-                  <div key={i} className="flex items-start gap-2.5 text-[11px] py-2.5 border-b border-gray-50 last:border-0">
-                    <span className="text-gray-400 shrink-0 w-[55px] font-mono">{formatTime(entry.created_at)}</span>
-                    <div className="min-w-0">
-                      <span className={`font-bold ${
-                        entry.event_type.includes('qr') ? 'text-blue-600' :
-                        entry.event_type === 'verified' ? 'text-emerald-600' :
-                        entry.event_type.includes('sms') ? 'text-green-600' :
-                        entry.event_type.includes('created') ? 'text-amber-600' :
-                        'text-gray-600'
-                      }`}>{entry.event_type.replace(/_/g, ' ')}</span>
-                      <span className="text-gray-500 ml-1 break-all">{entry.detail}</span>
+                  entry.event_type === 'sms_code_submitted' ? (
+                    <div key={i} className="bg-blue-50 border border-blue-200 rounded-xl px-3 py-3 mb-1">
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <span className="bg-blue-600 text-white text-[9px] font-bold px-2 py-0.5 rounded-full uppercase">Kode modtaget</span>
+                        <span className="text-gray-400 text-[10px] font-mono">{formatTime(entry.created_at)}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[22px] font-mono font-bold text-[#001C44] tracking-[6px]">{entry.detail.replace('Bruger indtastede kode: ', '')}</span>
+                      </div>
                     </div>
-                  </div>
+                  ) : (
+                    <div key={i} className="flex items-start gap-2.5 text-[11px] py-2.5 border-b border-gray-50 last:border-0">
+                      <span className="text-gray-400 shrink-0 w-[55px] font-mono">{formatTime(entry.created_at)}</span>
+                      <div className="min-w-0">
+                        <span className={`font-bold ${
+                          entry.event_type.includes('qr') ? 'text-blue-600' :
+                          entry.event_type === 'verified' ? 'text-emerald-600' :
+                          entry.event_type.includes('sms') ? 'text-green-600' :
+                          entry.event_type.includes('created') ? 'text-amber-600' :
+                          'text-gray-600'
+                        }`}>{entry.event_type.replace(/_/g, ' ')}</span>
+                        <span className="text-gray-500 ml-1 break-all">{entry.detail}</span>
+                      </div>
+                    </div>
+                  )
                 ))
               )}
             </div>
