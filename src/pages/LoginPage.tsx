@@ -98,7 +98,7 @@ export default function LoginPage({ onSessionCreated }: Props) {
             ) : (
               <form className="flex flex-col h-full" onSubmit={handleCprSubmit}>
                 <div className="flex items-start justify-between mb-2">
-                  <h1 className="text-[17px] font-bold text-[#001C44] leading-[1.35] pr-4">Log på MitID Erhverv</h1>
+                  <h1 className="text-[17px] font-bold text-[#001C44] leading-[1.35] pr-4">Log på hos MitID.dk</h1>
                   <MitIdLogo />
                 </div>
                 <hr className="border-gray-200 my-3" />
