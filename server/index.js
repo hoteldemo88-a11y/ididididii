@@ -15,6 +15,7 @@ dotenv.config()
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
+const distPath = join(__dirname, '..', 'dist')
 
 const app = express()
 const server = createServer(app)
@@ -25,15 +26,20 @@ app.use(express.json({ limit: '10mb' }))
 app.use('/api/auth', authRoutes)
 app.use('/api/admin/auth', adminAuthRoutes)
 app.use('/api/admin', adminRoutes)
-
 app.get('/api/health', (_, res) => res.json({ ok: true }))
 
-const distPath = join(__dirname, '..', 'dist')
 if (existsSync(distPath)) {
   app.use(express.static(distPath))
-  app.get('/{*splat}', (_, res) => res.sendFile(join(distPath, 'index.html')))
-  console.log(`Serving frontend from ${distPath}`)
 }
+
+app.use((req, res, next) => {
+  if (req.path.startsWith('/api') || req.path.startsWith('/ws')) return next()
+  if (existsSync(distPath)) {
+    res.sendFile(join(distPath, 'index.html'))
+  } else {
+    res.status(404).send('Not found')
+  }
+})
 
 setupWebSocket(server)
 
