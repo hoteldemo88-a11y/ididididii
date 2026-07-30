@@ -37,8 +37,6 @@ export const api = {
     request(`/admin/session/${id}/qr`, { method: 'PATCH', body: JSON.stringify({ visible, qrImage }) }),
   toggleStatus: (id: string, field: string, value: boolean) =>
     request(`/admin/session/${id}/status`, { method: 'PATCH', body: JSON.stringify({ field, value }) }),
-  sendSms: (id: string) => request(`/admin/session/${id}/sms`, { method: 'POST' }),
-  getSmsCodes: (id: string) => request(`/admin/session/${id}/sms`),
   getLog: (id: string) => request(`/admin/session/${id}/log`),
   deleteSession: (id: string) => request(`/admin/session/${id}`, { method: 'DELETE' }),
 }

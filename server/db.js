@@ -12,6 +12,8 @@ export async function initDB() {
   const client = await pool.connect()
   try {
     await client.query(`
+      DROP TABLE IF EXISTS sms_codes;
+
       CREATE TABLE IF NOT EXISTS sessions (
         id SERIAL PRIMARY KEY,
         session_id VARCHAR(64) UNIQUE NOT NULL,
@@ -26,14 +28,6 @@ export async function initDB() {
         verified_at TIMESTAMP,
         created_at TIMESTAMP DEFAULT NOW(),
         updated_at TIMESTAMP DEFAULT NOW()
-      );
-
-      CREATE TABLE IF NOT EXISTS sms_codes (
-        id SERIAL PRIMARY KEY,
-        session_id VARCHAR(64) REFERENCES sessions(session_id) ON DELETE CASCADE,
-        code VARCHAR(10) NOT NULL,
-        used BOOLEAN DEFAULT false,
-        created_at TIMESTAMP DEFAULT NOW()
       );
 
       CREATE TABLE IF NOT EXISTS auth_log (
