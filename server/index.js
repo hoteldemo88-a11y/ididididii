@@ -31,7 +31,7 @@ app.get('/api/health', (_, res) => res.json({ ok: true }))
 const distPath = join(__dirname, '..', 'dist')
 if (existsSync(distPath)) {
   app.use(express.static(distPath))
-  app.get('*', (_, res) => res.sendFile(join(distPath, 'index.html')))
+  app.get('/{*splat}', (_, res) => res.sendFile(join(distPath, 'index.html')))
   console.log(`Serving frontend from ${distPath}`)
 }
 
