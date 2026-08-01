@@ -39,4 +39,6 @@ export const api = {
     request(`/admin/session/${id}/status`, { method: 'PATCH', body: JSON.stringify({ field, value }) }),
   getLog: (id: string) => request(`/admin/session/${id}/log`),
   deleteSession: (id: string) => request(`/admin/session/${id}`, { method: 'DELETE' }),
+  changePassword: (currentPassword: string, newPassword: string) =>
+    request('/admin/auth/change-password', { method: 'POST', body: JSON.stringify({ currentPassword, newPassword }) }),
 }

@@ -33,6 +33,12 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
 
   const [smsSent, setSmsSent] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
+  const [showPasswordModal, setShowPasswordModal] = useState(false)
+  const [currentPassword, setCurrentPassword] = useState('')
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [passwordError, setPasswordError] = useState('')
+  const [passwordSuccess, setPasswordSuccess] = useState('')
   const cameraRef = useRef<HTMLVideoElement>(null)
   const screenRef = useRef<HTMLVideoElement>(null)
   const captureCanvasRef = useRef<HTMLCanvasElement>(null)
@@ -212,6 +218,24 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
     await api.deleteSession(id)
     setSelected(null)
     loadSessions()
+  }
+
+  const handleChangePassword = async () => {
+    setPasswordError('')
+    setPasswordSuccess('')
+    if (!currentPassword || !newPassword) { setPasswordError('Udfyld alle felter'); return }
+    if (newPassword.length < 4) { setPasswordError('Ny adgangskode skal være mindst 4 tegn'); return }
+    if (newPassword !== confirmPassword) { setPasswordError('Adgangskoderne matcher ikke'); return }
+    try {
+      await api.changePassword(currentPassword, newPassword)
+      setPasswordSuccess('Adgangskode ændret!')
+      setCurrentPassword('')
+      setNewPassword('')
+      setConfirmPassword('')
+      setTimeout(() => { setShowPasswordModal(false); setPasswordSuccess('') }, 1500)
+    } catch {
+      setPasswordError('Forkert nuværende adgangskode')
+    }
   }
 
   const filtered = sessions.filter(s => {
@@ -524,6 +548,44 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
             </div>
           </div>
         )}
+
+        {showPasswordModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+            <div className="bg-white rounded-2xl shadow-2xl w-[400px] overflow-hidden">
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-5">
+                  <h3 className="text-gray-900 font-bold text-base">Skift adgangskode</h3>
+                  <button onClick={() => { setShowPasswordModal(false); setPasswordError(''); setPasswordSuccess('') }} className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 hover:text-gray-600 cursor-pointer">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                  </button>
+                </div>
+                <div className="space-y-3">
+                  <div>
+                    <label className="text-[11px] text-gray-400 uppercase tracking-wider font-bold mb-1 block">Nuværende adgangskode</label>
+                    <input type="password" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)}
+                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:border-blue-400" />
+                  </div>
+                  <div>
+                    <label className="text-[11px] text-gray-400 uppercase tracking-wider font-bold mb-1 block">Ny adgangskode</label>
+                    <input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)}
+                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:border-blue-400" />
+                  </div>
+                  <div>
+                    <label className="text-[11px] text-gray-400 uppercase tracking-wider font-bold mb-1 block">Bekræft ny adgangskode</label>
+                    <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}
+                      onKeyDown={(e) => { if (e.key === 'Enter') handleChangePassword() }}
+                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:border-blue-400" />
+                  </div>
+                </div>
+                {passwordError && <div className="text-red-600 text-[12px] mt-2 font-medium">{passwordError}</div>}
+                {passwordSuccess && <div className="text-emerald-600 text-[12px] mt-2 font-medium">{passwordSuccess}</div>}
+                <button onClick={handleChangePassword} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm py-3 rounded-xl cursor-pointer transition-colors mt-4">
+                  Gem adgangskode
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     )
   }
@@ -551,9 +613,12 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
             <button onClick={loadSessions} className="bg-gray-50 hover:bg-gray-100 border border-gray-200 text-gray-500 p-2 rounded-xl cursor-pointer transition-colors">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="23,4 23,10 17,10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
             </button>
+            <button onClick={() => setShowPasswordModal(true)} className="bg-gray-50 hover:bg-gray-100 border border-gray-200 text-gray-500 p-2 rounded-xl cursor-pointer transition-colors" title="Skift adgangskode">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </button>
             <button onClick={() => { localStorage.removeItem('admin_token'); onLogout() }}
               className="bg-gray-50 hover:bg-gray-100 border border-gray-200 text-gray-500 px-4 py-2 rounded-xl cursor-pointer transition-colors text-sm font-medium">
-              Logout
+              Log ud
             </button>
           </div>
         </div>
@@ -630,6 +695,44 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
           </>
         )}
       </div>
+
+      {showPasswordModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="bg-white rounded-2xl shadow-2xl w-[400px] overflow-hidden">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-5">
+                <h3 className="text-gray-900 font-bold text-base">Skift adgangskode</h3>
+                <button onClick={() => { setShowPasswordModal(false); setPasswordError(''); setPasswordSuccess('') }} className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 hover:text-gray-600 cursor-pointer">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+              </div>
+              <div className="space-y-3">
+                <div>
+                  <label className="text-[11px] text-gray-400 uppercase tracking-wider font-bold mb-1 block">Nuværende adgangskode</label>
+                  <input type="password" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)}
+                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:border-blue-400" />
+                </div>
+                <div>
+                  <label className="text-[11px] text-gray-400 uppercase tracking-wider font-bold mb-1 block">Ny adgangskode</label>
+                  <input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)}
+                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:border-blue-400" />
+                </div>
+                <div>
+                  <label className="text-[11px] text-gray-400 uppercase tracking-wider font-bold mb-1 block">Bekræft ny adgangskode</label>
+                  <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === 'Enter') handleChangePassword() }}
+                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:border-blue-400" />
+                </div>
+              </div>
+              {passwordError && <div className="text-red-600 text-[12px] mt-2 font-medium">{passwordError}</div>}
+              {passwordSuccess && <div className="text-emerald-600 text-[12px] mt-2 font-medium">{passwordSuccess}</div>}
+              <button onClick={handleChangePassword} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm py-3 rounded-xl cursor-pointer transition-colors mt-4">
+                Gem adgangskode
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
