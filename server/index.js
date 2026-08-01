@@ -4,14 +4,12 @@ import { createServer } from 'http'
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
 import { existsSync } from 'fs'
-import dotenv from 'dotenv'
 import { initDB } from './db.js'
 import authRoutes from './routes/auth.js'
 import adminRoutes from './routes/admin.js'
 import adminAuthRoutes from './routes/adminAuth.js'
 import { setupWebSocket } from './websocket.js'
 
-dotenv.config()
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -46,4 +44,4 @@ setupWebSocket(server)
 const PORT = process.env.PORT || 3001
 
 await initDB()
-server.listen(PORT, () => console.log(`Server running on port ${PORT}`))
+server.listen(PORT, '0.0.0.0', () => console.log(`Server running on port ${PORT}`))

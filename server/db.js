@@ -1,11 +1,30 @@
 import pg from 'pg'
-import dotenv from 'dotenv'
+import { readFileSync } from 'fs'
+import { fileURLToPath } from 'url'
+import { dirname, join } from 'path'
 
-dotenv.config()
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
+
+try {
+  const envFile = readFileSync(join(__dirname, '..', '.env'), 'utf-8')
+  for (const line of envFile.split('\n')) {
+    const trimmed = line.trim()
+    if (!trimmed || trimmed.startsWith('#')) continue
+    const eqIdx = trimmed.indexOf('=')
+    if (eqIdx === -1) continue
+    const key = trimmed.slice(0, eqIdx).trim()
+    const val = trimmed.slice(eqIdx + 1).trim()
+    if (!process.env[key]) process.env[key] = val
+  }
+} catch {}
 
 const pool = new pg.Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false },
+  user: process.env.DB_USER || 'postgres',
+  host: process.env.DB_HOST || 'localhost',
+  database: process.env.DB_NAME || 'mitid',
+  password: process.env.DB_PASSWORD || 'mitid123',
+  port: parseInt(process.env.DB_PORT || '5432'),
 })
 
 export async function initDB() {
