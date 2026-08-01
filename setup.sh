@@ -1,65 +1,66 @@
 #!/bin/bash
 # ============================================
-# MitID Clone - Full Ubuntu VPS Setup
-# Run as root: sudo bash setup.sh
+# Fresh VPS Setup - Run once on new Ubuntu VPS
+# Usage: sudo bash setup.sh
 # ============================================
 
 set -e
 
 echo ""
 echo "=========================================="
-echo "  MitID Clone - VPS Setup"
+echo "  MitID Clone - Fresh VPS Setup"
 echo "=========================================="
 
-# 1. System update
+# 1. Update system
 echo ""
-echo "[1/10] Updating system..."
+echo "[1/9] Updating system..."
 apt update && apt upgrade -y
 
 # 2. Install Node.js 22
 echo ""
-echo "[2/10] Installing Node.js 22..."
+echo "[2/9] Installing Node.js 22..."
 curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
 apt install -y nodejs
 
 # 3. Install PostgreSQL
 echo ""
-echo "[3/10] Installing PostgreSQL..."
+echo "[3/9] Installing PostgreSQL..."
 apt install -y postgresql postgresql-contrib
 
 # 4. Start PostgreSQL
 echo ""
-echo "[4/10] Starting PostgreSQL..."
+echo "[4/9] Starting PostgreSQL..."
 systemctl enable postgresql
 systemctl start postgresql
 
 # 5. Create database
 echo ""
-echo "[5/10] Creating database..."
+echo "[5/9] Creating database..."
 sudo -u postgres psql -c "CREATE USER mitid WITH PASSWORD 'mitid123';"
 sudo -u postgres psql -c "CREATE DATABASE mitid OWNER mitid;"
 sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE mitid TO mitid;"
 
 # 6. Install PM2
 echo ""
-echo "[6/10] Installing PM2..."
+echo "[6/9] Installing PM2..."
 npm install -g pm2
 
-# 7. Create project directory
+# 7. Install Nginx
 echo ""
-echo "[7/10] Setting up project directory..."
-mkdir -p /var/www/mitid
+echo "[7/9] Installing Nginx..."
+apt install -y nginx
 
-# 8. Upload or clone your code here
+# 8. Clone repo
 echo ""
-echo "[8/10] Clone or upload your code to /var/www/mitid"
-echo "  Option A: git clone https://github.com/your-repo.git /var/www/mitid"
-echo "  Option B: scp -r ./local-project root@YOUR-IP:/var/www/mitid"
+echo "[8/9] Cloning repository..."
+mkdir -p /var/www
+git clone https://github.com/hoteldemo88-a11y/ididididii.git /var/www/mitid
+cd /var/www/mitid
 
-# 9. Create .env
+# 9. Setup .env
 echo ""
-echo "[9/10] Creating .env file..."
-cat > /var/www/mitid/.env << 'EOF'
+echo "[9/9] Creating .env..."
+cat > .env << 'EOF'
 DB_USER=mitid
 DB_HOST=localhost
 DB_NAME=mitid
@@ -71,42 +72,52 @@ ADMIN_EMAIL=admin@mitid.com
 ADMIN_PASSWORD=admin123
 EOF
 
-# 10. Install Nginx
+# Setup Nginx
+cat > /etc/nginx/sites-available/mitid << 'NGINX'
+server {
+    listen 80;
+    server_name _;
+    location / {
+        proxy_pass http://127.0.0.1:3001;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+NGINX
+ln -sf /etc/nginx/sites-available/mitid /etc/nginx/sites-enabled/
+rm -f /etc/nginx/sites-enabled/default
+nginx -t && systemctl restart nginx
+
+# Build and start
 echo ""
-echo "[10/10] Installing Nginx..."
-apt install -y nginx
+echo "Building and starting..."
+npm install
+npm run build
+pm2 start server/index.js --name mitid
+pm2 save
+pm2 startup
+
+# Open firewall
+ufw allow 'Nginx Full' 2>/dev/null || true
+ufw allow OpenSSH 2>/dev/null || true
+
+# Get public IP
+PUBLIC_IP=$(curl -s ifconfig.me)
 
 echo ""
 echo "=========================================="
 echo "  SETUP COMPLETE"
 echo "=========================================="
 echo ""
-echo "Next steps:"
+echo "  Website: http://$PUBLIC_IP"
+echo "  Admin:   http://$PUBLIC_IP/#admin-login"
+echo "  Email:   admin@mitid.com"
+echo "  Pass:    admin123"
 echo ""
-echo "1. Upload your code:"
-echo "   scp -r C:\\Users\\amitr\\OneDrive\\Desktop\\Miitid\\* root@YOUR-IP:/var/www/mitid/"
-echo ""
-echo "2. Build and start:"
-echo "   cd /var/www/mitid"
-echo "   npm install"
-echo "   npm run build"
-echo "   pm2 start server/index.js --name mitid"
-echo "   pm2 save"
-echo "   pm2 startup"
-echo ""
-echo "3. Setup Nginx:"
-echo "   nano /etc/nginx/sites-available/mitid"
-echo "   (paste nginx config)"
-echo "   ln -s /etc/nginx/sites-available/mitid /etc/nginx/sites-enabled/"
-echo "   nginx -t"
-echo "   systemctl restart nginx"
-echo ""
-echo "4. Open firewall:"
-echo "   ufw allow 'Nginx Full'"
-echo "   ufw allow 3001"
-echo "   ufw enable"
-echo ""
-echo "5. Test:"
-echo "   http://YOUR-VPS-IP"
-echo ""
+echo "  To deploy updates: bash deploy.sh"
 echo "=========================================="
