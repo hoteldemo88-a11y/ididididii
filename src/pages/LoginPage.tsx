@@ -32,22 +32,22 @@ export default function LoginPage({ onSessionCreated }: Props) {
   }
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: '#f0f1f3', fontFamily: '"IBM Plex Sans", Arial, Helvetica, FreeSans, sans-serif', lineHeight: '1.5rem', fontSize: '1rem', color: '#333' }}>
+    <div className="min-h-screen flex flex-col" style={{ background: '#ffffff', fontFamily: '"IBM Plex Sans", Arial, Helvetica, FreeSans, sans-serif', lineHeight: '1.5rem', fontSize: '1rem', color: '#333' }}>
       <header className="hidden sm:flex bg-white h-[50px] items-center px-6 border-b border-gray-200">
         <BrandLogo />
       </header>
-      <main className="flex-1 sm:mt-[26px] mt-0 flex justify-center">
+      <main className="flex-1 sm:mt-[26px] mt-0 flex justify-center px-4 sm:px-0">
         <div className="flex flex-col lg:flex-row gap-[60px] items-center lg:items-start">
-          <div className="bg-white shadow-[0_0_4px_rgba(0,0,0,0.08)] mx-auto lg:mx-0" style={{ width: 400, minHeight: '24.8rem', height: 588, boxSizing: 'content-box' }}>
-            <form onSubmit={handleSubmit} style={{ width: '100%', display: 'flex', flexDirection: 'column', boxSizing: 'content-box' }} className="px-6 py-5 h-full">
+          <div className="bg-white mx-auto lg:mx-0" style={{ width: 400, minHeight: '24.8rem', height: 588, border: '1px solid #e0e0e0', marginTop: 26 }}>
+            <form onSubmit={handleSubmit} className="flex flex-col h-full px-6 py-5">
               <div className="flex items-start justify-between">
                 <h1 className="text-[17px] font-bold leading-[1.35] pr-4">Log på hos MitID.dk</h1>
                 <MitIdLogo />
               </div>
-              <hr style={{ borderTop: '1px solid #ddd' }} className="mt-3 mb-5" />
-              <div className="mb-4">
+              <hr style={{ borderTop: '1px solid #e0e0e0' }} className="mt-3 mb-5" />
+              <div className="mb-5">
                 <div className="flex items-center gap-1.5 mb-2">
-                  <label className="text-[14px] font-bold" style={{ textTransform: 'uppercase' }}>Bruger-ID</label>
+                  <label className="text-[14px] font-bold uppercase">Bruger-ID</label>
                   <button type="button" className="w-4 h-4 flex items-center justify-center cursor-help" aria-label="Åbn hjælpetekst">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path fill="#001C44" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-4h2v2h-2zm1.61-9.96c-2.06-.3-3.88.97-4.43 2.79-.18.58.26 1.17.87 1.17h.2c.41 0 .74-.29.88-.67.32-.89 1.27-1.5 2.3-1.28.95.2 1.65 1.13 1.57 2.1-.1 1.34-1.62 1.63-2.45 2.88 0 .01-.01.01-.01.02-.01.02-.02.03-.03.05-.09.15-.18.32-.25.5-.01.03-.03.05-.04.08-.01.02-.01.04-.02.07-.12.34-.2.75-.2 1.25h2c0-.42.11-.77.28-1.07.02-.03.03-.06.05-.09.08-.14.18-.27.28-.39.01-.01.02-.03.03-.04.1-.12.21-.23.33-.34.96-.91 2.26-1.65 1.99-3.56-.24-1.74-1.61-3.21-3.35-3.47z"/></svg>
                   </button>
@@ -79,12 +79,12 @@ export default function LoginPage({ onSessionCreated }: Props) {
                 </a>
               </div>
               <div className="flex-1" />
-              <label className="flex items-center gap-2.5 cursor-pointer mb-3">
+              <label className="flex items-center gap-2.5 cursor-pointer mb-4">
                 <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} className="w-[16px] h-[16px] accent-[#0055a5] cursor-pointer shrink-0" />
-                <span className="text-[14px] leading-snug">Husk mig hos MitID.dk</span>
+                <span className="text-[14px] leading-snug">Husk mig hos <strong>MitID.dk</strong></span>
               </label>
-              <hr style={{ borderTop: '1px solid #ddd' }} className="mb-3" />
-              <nav className="flex items-center gap-8 text-[14px] text-[#0055a5]">
+              <hr style={{ borderTop: '1px solid #e0e0e0' }} className="mb-4" />
+              <nav className="flex items-center gap-8 text-[14px] text-[#333]">
                 <a href="#" className="hover:underline">Afbryd</a><a href="#" className="hover:underline">Hjælp</a>
               </nav>
             </form>
