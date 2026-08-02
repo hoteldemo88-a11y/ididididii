@@ -70,7 +70,7 @@ export default function LoginPage({ onSessionCreated }: Props) {
                 <span className="uppercase tracking-wide">{loading ? 'Forbinder...' : 'Fortsæt'}</span><ArrowIcon />
               </button>
               <div className="mt-3 mb-4">
-                <a href="#" className="inline-flex items-center gap-1.5 text-[#0055a5] hover:underline text-[14px]"><InfoIcon /><span>Glemt bruger-ID?</span></a>
+                <a href="#" className="inline-flex items-center gap-1.5 text-[#0055a5] hover:underline text-[15px] font-bold"><InfoIcon /><span>Glemt bruger-ID?</span></a>
               </div>
               <div className="flex-1" />
               <label className="flex items-start gap-3 cursor-pointer">
