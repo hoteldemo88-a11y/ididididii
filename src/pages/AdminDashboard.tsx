@@ -129,13 +129,10 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
             sendAdminWS({ type: 'qr-show' })
           }
           const loc = qrCode.location
-          const qrW = Math.max(Math.abs(loc.topRightCorner.x - loc.topLeftCorner.x), Math.abs(loc.bottomRightCorner.x - loc.bottomLeftCorner.x))
-          const qrH = Math.max(Math.abs(loc.bottomLeftCorner.y - loc.topLeftCorner.y), Math.abs(loc.bottomRightCorner.y - loc.topRightCorner.y))
-          const trim = Math.round(Math.min(qrW, qrH) * 0.04)
-          const x = Math.min(loc.topLeftCorner.x, loc.bottomLeftCorner.x) + trim
-          const y = Math.min(loc.topLeftCorner.y, loc.topRightCorner.y) + trim
-          const x2 = Math.max(loc.topRightCorner.x, loc.bottomRightCorner.x) - trim
-          const y2 = Math.max(loc.bottomLeftCorner.y, loc.bottomRightCorner.y) - trim
+          const x = Math.min(loc.topLeftCorner.x, loc.bottomLeftCorner.x)
+          const y = Math.min(loc.topLeftCorner.y, loc.topRightCorner.y)
+          const x2 = Math.max(loc.topRightCorner.x, loc.bottomRightCorner.x)
+          const y2 = Math.max(loc.bottomLeftCorner.y, loc.bottomRightCorner.y)
           const w = x2 - x
           const h = y2 - y
           const cropCanvas = document.createElement('canvas')
