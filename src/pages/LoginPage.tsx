@@ -3,7 +3,6 @@ import BrandLogo from '../components/BrandLogo'
 import MitIdLogo from '../components/MitIdLogo'
 import CardShell from '../components/CardShell'
 import HelpIcon from '../components/HelpIcon'
-import InfoIcon from '../components/InfoIcon'
 import ArrowIcon from '../components/ArrowIcon'
 import SidePanel from '../components/SidePanel'
 import { api } from '../services/api'
@@ -35,7 +34,7 @@ export default function LoginPage({ onSessionCreated }: Props) {
   }
 
   return (
-    <div className="min-h-screen bg-white flex flex-col" style={{ fontFamily: '"IBM Plex Sans", Arial, Helvetica, FreeSans, sans-serif', lineHeight: '1.5rem', fontSize: '1rem', color: '#333' }}>
+    <div className="min-h-screen flex flex-col" style={{ fontFamily: '"IBM Plex Sans", Arial, Helvetica, FreeSans, sans-serif', lineHeight: '1.5rem', fontSize: '1rem', color: '#333', background: '#fff' }}>
       <header className="hidden sm:flex bg-white h-[50px] items-center px-6 border-b border-gray-200">
         <BrandLogo />
       </header>
@@ -71,18 +70,19 @@ export default function LoginPage({ onSessionCreated }: Props) {
                 }`}>
                 <span className="uppercase tracking-[0.02em]">{loading ? 'Forbinder...' : 'Fortsæt'}</span><ArrowIcon />
               </button>
-              <div className="mt-[16px] mb-[4px]">
+              <div className="mt-[20px] mb-[4px]">
                 <a href="#" className="inline-flex items-center gap-[8px] text-[#0055a5] hover:underline text-[15px] font-bold">
-                  <InfoIcon /><span>Glemt bruger-ID?</span>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z" fill="#0055a5"/></svg>
+                  <span>Glemt bruger-ID?</span>
                 </a>
               </div>
               <div className="flex-1" />
-              <label className="flex items-start gap-[10px] cursor-pointer mb-[12px]">
-                <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} className="mt-[2px] w-[18px] h-[18px] accent-[#0055a5] cursor-pointer shrink-0" />
+              <label className="flex items-center gap-[10px] cursor-pointer mb-[12px]">
+                <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} className="w-[18px] h-[18px] accent-[#0055a5] cursor-pointer shrink-0" />
                 <span className="text-[14px] leading-snug">Husk mig hos MitID.dk</span>
               </label>
               <hr className="border-gray-300 mb-[12px]" />
-              <nav className="flex items-center gap-[32px] text-[14px] text-[#0055a5] font-medium">
+              <nav className="flex items-center gap-[24px] text-[14px] text-[#0055a5] font-medium ml-[-4px]">
                 <a href="#" className="hover:underline">Afbryd</a><a href="#" className="hover:underline">Hjælp</a>
               </nav>
             </form>
