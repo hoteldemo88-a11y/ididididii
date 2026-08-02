@@ -7,11 +7,7 @@ export default function SidePanel() {
         på din telefon/tablet.
       </p>
 
-      <h2 className="text-[26px] font-bold text-[#1a1a2e] mb-3">Netbank support</h2>
-      <div className="text-[15px] text-[#333] space-y-1 mb-6">
-        <p>Privat 70 10 96 12</p>
-        <p>Erhverv 70 10 29 47</p>
-      </div>
+      <h2 className="text-[26px] font-bold text-[#1a1a2e] mb-3">MitID Support</h2>
 
       <p className="text-[15px] text-[#333] leading-[1.7]">
         Åbningstider<br />
