@@ -35,7 +35,7 @@ export default function LoginPage({ onSessionCreated }: Props) {
   }
 
   return (
-    <div className="min-h-screen bg-[#f0f1f3] flex flex-col" style={{ fontFamily: '"IBM Plex Sans", Arial, Helvetica, FreeSans, sans-serif', lineHeight: '1.5rem', fontSize: '1rem', color: '#333' }}>
+    <div className="min-h-screen bg-white flex flex-col" style={{ fontFamily: '"IBM Plex Sans", Arial, Helvetica, FreeSans, sans-serif', lineHeight: '1.5rem', fontSize: '1rem', color: '#333' }}>
       <header className="hidden sm:flex bg-white h-[50px] items-center px-6 border-b border-gray-200">
         <BrandLogo />
       </header>
@@ -50,7 +50,7 @@ export default function LoginPage({ onSessionCreated }: Props) {
               <hr className="border-gray-300 mt-[12px] mb-[16px]" />
               <div className="mb-[16px]">
                 <div className="flex items-center gap-[6px] mb-[8px]">
-                  <label className="text-[14px] font-bold">Bruger-ID</label>
+                  <label className="text-[14px] font-bold uppercase tracking-wide">Bruger-ID</label>
                   <button type="button" className="w-[16px] h-[16px] rounded-full flex items-center justify-center cursor-help" aria-label="Åbn hjælpetekst"><HelpIcon /></button>
                 </div>
                 <div className="relative">
