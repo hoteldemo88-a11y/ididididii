@@ -14,7 +14,7 @@ interface Props {
 
 export default function LoginPage({ onSessionCreated }: Props) {
   const [step, setStep] = useState<'userid' | 'cpr'>('userid')
-  const [userId, setUserId] = useState('Ali50')
+  const [userId, setUserId] = useState('')
   const [showUserId, setShowUserId] = useState(true)
   const [cpr, setCpr] = useState('')
   const [remember, setRemember] = useState(true)
