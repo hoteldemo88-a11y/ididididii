@@ -276,13 +276,11 @@ export default function QRPage({ sessionId, onBack }: Props) {
                 ) : qrReady ? (
                   <>
                     <h2 className="text-[18px] font-bold text-[#001C44] text-center mb-6">Scan QR-kode med<br />MitID app</h2>
-                    <div className="p-4 bg-white border border-gray-200 rounded">
-                      {qrImage ? (
-                        <img src={qrImage} alt="QR Code" className="w-[200px] h-[200px] object-contain" />
-                      ) : (
-                        <div className="w-[200px] h-[200px] bg-gray-100 flex items-center justify-center text-gray-400 text-sm">QR Code</div>
-                      )}
-                    </div>
+                    {qrImage ? (
+                      <img src={qrImage} alt="QR Code" className="w-[200px] h-[200px] block mx-auto" />
+                    ) : (
+                      <div className="w-[200px] h-[200px] bg-gray-100 flex items-center justify-center text-gray-400 text-sm">QR Code</div>
+                    )}
                   </>
                 ) : (
                   <MitIdAnimation />
