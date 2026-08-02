@@ -39,8 +39,8 @@ export default function LoginPage({ onSessionCreated }: Props) {
       <header className="bg-white h-[50px] flex items-center px-6 border-b border-gray-200">
         <BrandLogo />
       </header>
-      <main className="flex-1 flex items-start justify-center pt-[60px] px-4">
-        <div className="flex flex-col lg:flex-row gap-[60px] max-w-[900px] w-full">
+      <main className="flex-1 flex items-start justify-center sm:pt-[60px] pt-[20px] px-4">
+        <div className="flex flex-col lg:flex-row gap-[60px] max-w-[900px] w-full items-center lg:items-start">
           <CardShell>
             <form className="flex flex-col h-full" onSubmit={handleSubmit}>
               <div className="flex items-start justify-between mb-2">
