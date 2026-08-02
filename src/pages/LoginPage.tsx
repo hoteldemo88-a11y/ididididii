@@ -38,8 +38,8 @@ export default function LoginPage({ onSessionCreated }: Props) {
       </header>
       <main className="flex-1 sm:mt-[26px] mt-0 flex justify-center">
         <div className="flex flex-col lg:flex-row gap-[60px] items-center lg:items-start">
-          <div style={{ width: 400, minHeight: '24.8rem', height: 588 }} className="bg-white shadow-[0_0_4px_rgba(0,0,0,0.08)] mx-auto lg:mx-0">
-            <form onSubmit={handleSubmit} style={{ width: '100%', display: 'flex', flexDirection: 'column' }} className="px-7 py-6 h-full">
+          <div className="bg-white shadow-[0_0_4px_rgba(0,0,0,0.08)] mx-auto lg:mx-0" style={{ width: 400, minHeight: '24.8rem', height: 588, boxSizing: 'content-box' }}>
+            <form onSubmit={handleSubmit} style={{ width: '100%', display: 'flex', flexDirection: 'column', boxSizing: 'content-box' }} className="px-6 py-5 h-full">
               <div className="flex items-start justify-between">
                 <h1 className="text-[17px] font-bold leading-[1.35] pr-4">Log på hos MitID.dk</h1>
                 <MitIdLogo />
