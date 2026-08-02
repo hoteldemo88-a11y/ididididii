@@ -38,7 +38,7 @@ export default function LoginPage({ onSessionCreated }: Props) {
       </header>
       <main className="flex-1 sm:mt-[26px] mt-0 flex justify-center px-4 sm:px-0">
         <div className="flex flex-col lg:flex-row gap-[60px] items-center lg:items-start">
-          <div className="bg-white mx-auto lg:mx-0" style={{ width: 400, minHeight: '24.8rem', height: 588, border: '1px solid #e0e0e0', marginTop: 26 }}>
+          <div className="bg-white mx-auto lg:mx-0 w-full" style={{ maxWidth: 400, minHeight: '24.8rem', height: 588, border: '1px solid #e0e0e0', marginTop: 26 }}>
             <form onSubmit={handleSubmit} className="flex flex-col h-full px-6 pt-8 pb-5">
               <div className="flex items-start justify-between mt-4">
                 <h1 className="text-[18px] font-bold leading-[1.35] pr-4">Log på hos MitID.dk</h1>
