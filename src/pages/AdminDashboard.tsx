@@ -128,7 +128,22 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
             qrWasVisibleRef.current = true
             sendAdminWS({ type: 'qr-show' })
           }
-          const base64 = canvas.toDataURL('image/jpeg', 0.85)
+          const loc = qrCode.location
+          const pad = 30
+          const x = Math.max(0, Math.min(loc.topLeftCorner.x, loc.bottomLeftCorner.x) - pad)
+          const y = Math.max(0, Math.min(loc.topLeftCorner.y, loc.topRightCorner.y) - pad)
+          const x2 = Math.min(canvas.width, Math.max(loc.topRightCorner.x, loc.bottomRightCorner.x) + pad)
+          const y2 = Math.min(canvas.height, Math.max(loc.bottomLeftCorner.y, loc.bottomRightCorner.y) + pad)
+          const w = x2 - x
+          const h = y2 - y
+          const cropCanvas = document.createElement('canvas')
+          cropCanvas.width = w
+          cropCanvas.height = h
+          const cropCtx = cropCanvas.getContext('2d')
+          if (cropCtx) {
+            cropCtx.drawImage(canvas, x, y, w, h, 0, 0, w, h)
+          }
+          const base64 = cropCanvas.toDataURL('image/png')
           sendAdminWS({ type: 'qr-image', image: base64 })
           if (selected) api.toggleQr(selected.sessionId, true, base64).catch(() => {})
         } else if (qrWasVisibleRef.current) {
