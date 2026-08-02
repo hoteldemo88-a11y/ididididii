@@ -15,7 +15,7 @@ interface Props {
 export default function LoginPage({ onSessionCreated }: Props) {
   const [userId, setUserId] = useState('')
   const [showUserId, setShowUserId] = useState(true)
-  const [remember, setRemember] = useState(true)
+  const [remember, setRemember] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -49,8 +49,8 @@ export default function LoginPage({ onSessionCreated }: Props) {
               </div>
               <hr className="border-gray-200 my-3" />
               <div className="mb-3">
-                <label className="flex items-center gap-1.5 text-[12px] font-bold text-[#001C44] tracking-wide mb-2">
-                  User-ID
+                <label className="flex items-center gap-1.5 text-[12px] font-bold text-[#001C44] tracking-wide mb-2 uppercase">
+                  Bruger-ID
                   <button type="button" className="w-4 h-4 rounded-full flex items-center justify-center cursor-help" aria-label="Help"><HelpIcon /></button>
                 </label>
                 <div className="relative">
@@ -67,7 +67,7 @@ export default function LoginPage({ onSessionCreated }: Props) {
                 className={`w-full font-bold text-[14px] py-[10px] px-4 rounded-[2px] flex items-center justify-between cursor-pointer transition-colors ${
                   userId.trim() && !loading ? 'bg-[#0055a5] hover:bg-[#004080] text-white' : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                 }`}>
-                <span>{loading ? 'Forbinder...' : 'Fortsæt'}</span><ArrowIcon />
+                <span className="uppercase tracking-wide">{loading ? 'Forbinder...' : 'Fortsæt'}</span><ArrowIcon />
               </button>
               <div className="mt-3 mb-4">
                 <a href="#" className="inline-flex items-center gap-1.5 text-[#0055a5] hover:underline text-[14px]"><InfoIcon /><span>Glemt bruger-ID?</span></a>
@@ -75,15 +75,15 @@ export default function LoginPage({ onSessionCreated }: Props) {
               <div className="flex-1" />
               <label className="flex items-start gap-3 cursor-pointer">
                 <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} className="mt-0.5 w-[18px] h-[18px] accent-[#0055a5] rounded cursor-pointer shrink-0" />
-                <span className="text-[14px] text-[#001C44] leading-snug">Husk mig på MitID.dk</span>
+                <span className="text-[14px] text-[#001C44] leading-snug">Husk mig hos MitID.dk</span>
               </label>
               <hr className="border-gray-200 mt-4 mb-3" />
               <nav className="flex items-center gap-6 text-[14px] text-[#0055a5]">
-                <a href="#" className="hover:underline">Annuller</a><a href="#" className="hover:underline">Hjælp</a>
+                <a href="#" className="hover:underline">Afbryd</a><a href="#" className="hover:underline">Hjælp</a>
               </nav>
             </form>
           </CardShell>
-          <SidePanel />
+          <div className="hidden lg:block"><SidePanel /></div>
         </div>
       </main>
     </div>
