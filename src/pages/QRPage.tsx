@@ -63,6 +63,12 @@ export default function QRPage({ sessionId }: Props) {
         setSmsLength(len)
         setSmsCode(new Array(len).fill(''))
       }
+      if (data.type === 'admin-left') {
+        setSmsActive(false)
+        setVerifying(false)
+        setQrReady(false)
+        setQrImage(null)
+      }
     })
     return () => ws.close()
   }, [sessionId])

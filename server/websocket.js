@@ -97,6 +97,11 @@ export function setupWebSocket(server) {
           if (msg.type === 'broadcast-toggle') {
             sendTo(sessionId, 'user', { type: 'broadcast-toggle', enabled: msg.enabled })
           }
+
+          if (msg.type === 'admin-left') {
+            sendTo(sessionId, 'user', { type: 'admin-left' })
+            console.log(`[WS] Admin left session ${sessionId.slice(0,8)}`)
+          }
         }
 
         if (role === 'user' && msg.type === 'verified') {
