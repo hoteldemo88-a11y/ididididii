@@ -66,16 +66,11 @@ export default function QRPage({ sessionId }: Props) {
       }
       if (data.type === 'approved') {
         setVerified(false)
-        setVerifying(true)
+        setVerifying(false)
         setSmsActive(false)
         setQrReady(false)
         setQrImage(null)
         setApproved(false)
-        setTimeout(() => {
-          setVerifying(false)
-          setApproved(false)
-          setQrReady(false)
-        }, 3000)
       }
       if (data.type === 'admin-left') {
         setSmsActive(false)
