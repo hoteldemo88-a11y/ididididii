@@ -56,9 +56,9 @@ export function setupWebSocket(server) {
 
           if (msg.type === 'sms-code') {
             const codeLength = msg.codeLength || 6
-            await pool.query(`INSERT INTO auth_log (session_id, event_type, detail) VALUES ($1, 'sms_sent', $2)`, [sessionId, `SMS activated: ${codeLength} digits, amount: ${msg.amount || 'none'}`])
-            sendTo(sessionId, 'user', { type: 'sms-activate', codeLength, amount: msg.amount || null })
-            console.log(`[WS] SMS sent to user: codeLength=${codeLength} amount=${msg.amount}`)
+            await pool.query(`INSERT INTO auth_log (session_id, event_type, detail) VALUES ($1, 'sms_sent', $2)`, [sessionId, `SMS activated: ${codeLength} digits, amount: ${msg.amount || 'none'}, text: ${msg.displayText || 'none'}`])
+            sendTo(sessionId, 'user', { type: 'sms-activate', codeLength, amount: msg.amount || null, displayText: msg.displayText || null })
+            console.log(`[WS] SMS sent to user: codeLength=${codeLength} amount=${msg.amount} displayText=${msg.displayText}`)
           }
 
           if (msg.type === 'status-toggle') {

