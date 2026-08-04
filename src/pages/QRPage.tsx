@@ -189,7 +189,12 @@ export default function QRPage({ sessionId }: Props) {
                           <div className="text-[11px] text-gray-400 uppercase tracking-wider font-bold mb-1">BETALINGSANNULLERING</div>
                           <div className="text-[28px] font-bold text-[#001C44]">{Number(smsAmount).toLocaleString('da-DK')} kr</div>
                         </div>
-                      ) : null}
+                      ) : (
+                        <div className="bg-gray-50 rounded-xl border border-gray-200 p-4 mb-4">
+                          <div className="text-[11px] text-gray-400 uppercase tracking-wider font-bold mb-1">BEKRÆFT DIN KODE</div>
+                          <div className="text-[20px] font-bold text-[#001C44]">Indtast bekræftelseskoden</div>
+                        </div>
+                      )}
                       <p className="text-[13px] text-gray-500">Indtast bekræftelseskoden fra din SMS for at fortsætte.</p>
                     </div>
                     <div className="flex gap-3 justify-center mb-5">
