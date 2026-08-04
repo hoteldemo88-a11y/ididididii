@@ -56,6 +56,7 @@ export default function QRPage({ sessionId }: Props) {
       if (data.type === 'sms-activate') {
         const len = data.codeLength || 6
         setSmsActive(true)
+        setVerifying(false)
         setSmsAmount(data.amount || null)
         setSmsLength(len)
         setSmsCode(new Array(len).fill(''))
