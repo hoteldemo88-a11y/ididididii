@@ -32,7 +32,7 @@ export default function App() {
   }
 
   if (view === 'qr' && sessionId) {
-    return <QRPage sessionId={sessionId} onBack={() => { setView('login'); setSessionId('') }} />
+    return <QRPage sessionId={sessionId} />
   }
 
   return (
