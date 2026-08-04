@@ -71,7 +71,7 @@ export default function LoginPage({ onSessionCreated }: Props) {
                 <span className="uppercase">{loading ? 'Forbinder...' : 'Fortsæt'}</span><ArrowIcon />
               </button>
               <div className="mt-4 mb-1">
-                <a href="#" className="inline-flex items-center gap-2 text-[#0055a5] hover:underline text-[15px]">
+                <a href="#" className="inline-flex items-center gap-2 text-[#0055a5] hover:underline text-[15px] font-bold">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z" fill="#0055a5"/>
                   </svg>
@@ -81,7 +81,7 @@ export default function LoginPage({ onSessionCreated }: Props) {
               <div className="flex-1" />
               <label className="flex items-center gap-2.5 cursor-pointer mb-4">
                 <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} className="w-[16px] h-[16px] accent-[#0055a5] cursor-pointer shrink-0" />
-                <span className="text-[15px] leading-snug">Husk mig hos <strong>MitID.dk</strong></span>
+                <span className="text-[15px] leading-snug font-bold">Husk mig hos <strong>MitID.dk</strong></span>
               </label>
               <hr style={{ borderTop: '1px solid #e0e0e0' }} className="mb-4" />
               <nav className="flex items-center gap-8 text-[15px] font-bold text-[#333]">
