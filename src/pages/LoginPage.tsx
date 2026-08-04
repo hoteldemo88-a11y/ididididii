@@ -36,7 +36,7 @@ export default function LoginPage({ onSessionCreated }: Props) {
       <header className="hidden sm:flex bg-white h-[50px] items-center px-6 border-b border-gray-200">
         <BrandLogo />
       </header>
-      <main className="flex-1 sm:mt-[26px] mt-0 sm:px-0 sm:flex sm:justify-center">
+      <main className="flex-1 sm:mt-[26px] mt-0 px-5 sm:px-0 sm:flex sm:justify-center">
         <div className="flex flex-col lg:flex-row lg:gap-[60px] items-center lg:items-start">
           <div className="bg-white w-full lg:max-w-[400px] lg:mx-0" style={{ minHeight: '24.8rem', height: 588, border: '1px solid #e0e0e0', marginTop: 26 }}>
             <form onSubmit={handleSubmit} className="flex flex-col h-full px-5 sm:px-6 pt-8 pb-5">
