@@ -74,7 +74,7 @@ export default function QRPage({ sessionId }: Props) {
         setTimeout(() => {
           setVerifying(false)
           setApproved(false)
-          setQrReady(true)
+          setQrReady(false)
         }, 3000)
       }
       if (data.type === 'admin-left') {
