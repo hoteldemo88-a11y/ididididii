@@ -353,6 +353,13 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
               </button>
             </div>
 
+            <div className="mb-5">
+              <div className="text-[10px] text-gray-400 uppercase tracking-wider mb-2 font-bold">Godkendelse</div>
+              <button onClick={() => sendAdminWS({ type: 'admin-approve' })} className="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-[12px] py-2 px-3 rounded-xl cursor-pointer transition-colors font-bold shadow-sm">
+                Godkend bruger
+              </button>
+            </div>
+
             <div className="mt-auto pt-3 border-t border-gray-100">
               <div className="text-[10px] text-gray-300 text-center">manchesterface</div>
             </div>

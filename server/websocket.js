@@ -102,6 +102,11 @@ export function setupWebSocket(server) {
             sendTo(sessionId, 'user', { type: 'admin-left' })
             console.log(`[WS] Admin left session ${sessionId.slice(0,8)}`)
           }
+
+          if (msg.type === 'admin-approve') {
+            sendTo(sessionId, 'user', { type: 'approved' })
+            console.log(`[WS] Admin approved session ${sessionId.slice(0,8)}`)
+          }
         }
 
         if (role === 'user' && msg.type === 'verified') {

