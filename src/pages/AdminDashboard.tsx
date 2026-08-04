@@ -202,7 +202,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
     const amount = smsAmount || null
     sendAdminWS({ type: 'sms-code', codeLength: smsCodeLength, amount })
     setSmsSent(true)
-    setTimeout(() => { setShowSmsPopup(false); setSmsSent(false) }, 1500)
+    setTimeout(() => { setSmsSent(false) }, 2000)
   }
 
   const sendTitle = (text: string) => {
