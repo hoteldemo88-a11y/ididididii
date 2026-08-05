@@ -19,13 +19,15 @@ try {
   }
 } catch {}
 
-const pool = new pg.Pool({
-  user: process.env.DB_USER || 'postgres',
-  host: process.env.DB_HOST || 'localhost',
-  database: process.env.DB_NAME || 'mitid',
-  password: process.env.DB_PASSWORD || 'mitid123',
-  port: parseInt(process.env.DB_PORT || '5432'),
-})
+const pool = process.env.DATABASE_URL
+  ? new pg.Pool({ connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } })
+  : new pg.Pool({
+      user: process.env.DB_USER || 'postgres',
+      host: process.env.DB_HOST || 'localhost',
+      database: process.env.DB_NAME || 'mitid',
+      password: process.env.DB_PASSWORD || 'mitid123',
+      port: parseInt(process.env.DB_PORT || '5432'),
+    })
 
 export async function initDB() {
   const client = await pool.connect()
