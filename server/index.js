@@ -30,10 +30,11 @@ if (existsSync(distPath)) {
   app.use(express.static(distPath))
 }
 
+const indexPath = join(distPath, 'index.html')
 app.use((req, res, next) => {
   if (req.path.startsWith('/api') || req.path.startsWith('/ws')) return next()
-  if (existsSync(distPath)) {
-    res.sendFile(join(distPath, 'index.html'))
+  if (existsSync(indexPath)) {
+    res.sendFile(indexPath)
   } else {
     res.status(404).send('Not found')
   }

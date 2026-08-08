@@ -1,18 +1,16 @@
 services:
   - type: web
-    name: miitid
+    name: ididididii
     runtime: node
-    plan: free
     buildCommand: npm install && npm run build
     startCommand: node server/index.js
+    healthCheckPath: /api/health
     envVars:
       - key: DATABASE_URL
         sync: false
       - key: JWT_SECRET
-        generateValue: false
+        value: mitid_admin_secret_key_2026
       - key: ADMIN_EMAIL
-        sync: false
+        value: admin@mitid.com
       - key: ADMIN_PASSWORD
-        sync: false
-      - key: NODE_ENV
-        value: production
+        value: admin123
